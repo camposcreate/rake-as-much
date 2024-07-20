@@ -1,11 +1,38 @@
+var largeStrings; // +3 words
+var mediumStrings; // 2 words
+var smallStrings; // 1 words
+
+function categorizeString(raw) {
+    // iterate keyword data and categorize
+    raw.forEach((curr) => {
+        if (curr.trim().split(/\s+/).length >= 3) {
+            largeStrings.push(curr);
+        } else if (curr.trim().split(/\s+/).length === 2) {
+            mediumStrings.push(curr);
+        } else {
+            smallStrings.push(curr);
+        }
+    });
+
+}
+
 function updateDisplay(data) {
+    largeStrings = [];
+    mediumStrings = [];
+    smallStrings = [];
+
+    categorizeString(data); // call function
+
     const display = document.getElementById('display');
     display.innerHTML = '';
 
+    // display data
     if (data != null) {
         display.classList.add('keywords');
         display.innerHTML = `
-            <p class='result'>${data.join(', ')}</p>
+            <p class='largeStrings'>${largeStrings.join(', ')}</p>
+            <p class='mediumStrings'>${mediumStrings.join(', ')}</p>
+            <p class='smallStrings'>${smallStrings.join(', ')}</p>
         `;
     }
 }
