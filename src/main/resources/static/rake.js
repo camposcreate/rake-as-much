@@ -17,11 +17,13 @@ function categorizeString(raw) {
 }
 
 function updateDisplay(data) {
+    // clear arrays if re-submit
     largeStrings = [];
     mediumStrings = [];
     smallStrings = [];
 
-    categorizeString(data); // call function
+    categorizeString(data); // are keywords 1, 2, or 3+ words
+    //addClasses(); // add class to each keyword
 
     const display = document.getElementById('display');
     display.innerHTML = '';
@@ -29,11 +31,28 @@ function updateDisplay(data) {
     // display data
     if (data != null) {
         display.classList.add('keywords');
-        display.innerHTML = `
-            <p class='largeStrings'>${largeStrings.join(', ')}</p>
-            <p class='mediumStrings'>${mediumStrings.join(', ')}</p>
-            <p class='smallStrings'>${smallStrings.join(', ')}</p>
-        `;
+            const largeContainer = document.createElement('ul');
+            largeContainer.classList.add('largeContainer');
+
+            largeStrings.forEach((large) => {
+                const li = document.createElement("li");
+                li.textContent = large;
+                li.classList.add('hoverable');
+                largeContainer.appendChild(li);
+            });
+
+            // medium keywords list
+            const mediumContainer = document.createElement('ul');
+            mediumContainer.classList.add('mediumContainer');
+
+            mediumStrings.forEach((medium) => {
+                const li = document.createElement("li");
+                li.textContent = medium;
+                li.classList.add('hoverable');
+                largeContainer.appendChild(li);
+            });
+
+        display.appendChild(largeContainer, mediumContainer);
     }
 }
 

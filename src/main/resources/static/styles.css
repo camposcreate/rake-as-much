@@ -1,8 +1,25 @@
 * {
-    margin: 0,
-    padding: 0,
+    margin: 0;
+    padding: 0;
 }
-
-#display p {
+body {
     color: #000;
+}
+.keywords p {
+    color: #000;
+}
+ul {
+    list-style.type: none;
+    overflow: hidden;
+}
+li {
+    display: block;
+    float: left;
+    padding: 0.5em;
+    text-align: center;
+    color: blue;
+}
+.hoverable:hover {
+    background-color: yellow;
+    cursor: pointer;
 }
