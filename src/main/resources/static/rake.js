@@ -2,6 +2,9 @@ var largeStrings; // +3 words
 var mediumStrings; // 2 words
 var smallStrings; // 1 words
 
+var globalUserData;
+let keywordMap = new Map();
+
 // iterate keyword data and categorize (large, medium, small)
 function categorizeString(raw) {
     raw.forEach((curr) => {
@@ -15,7 +18,16 @@ function categorizeString(raw) {
     });
 }
 
+/*
+function createMapping(large, medium, small) {
+
+}
+*/
+
 function updateDisplay(data) {
+
+    // counter
+    let num = 0;
 
     // initialize arrays as empty
     largeStrings = [];
@@ -23,7 +35,7 @@ function updateDisplay(data) {
     smallStrings = [];
 
     categorizeString(data); // are keywords 1, 2, or 3+ words?
-    //addClasses(); // add class to each keyword
+    keywordMap.clear(); // clear any pre-existing data
 
     const display = document.getElementById('display');
     display.innerHTML = '';
@@ -37,6 +49,7 @@ function updateDisplay(data) {
         largeContainer.classList.add('largeContainer');
 
         largeStrings.forEach((large) => {
+            keywordMap.set(large, num++);
             const li = document.createElement("li");
             li.textContent = large;
             li.classList.add('hoverable');
@@ -55,6 +68,7 @@ function updateDisplay(data) {
         mediumContainer.classList.add('mediumContainer');
 
         mediumStrings.forEach((medium) => {
+            keywordMap.set(medium, num++);
             const li = document.createElement("li");
             li.textContent = medium;
             li.classList.add('hoverable');
@@ -73,6 +87,7 @@ function updateDisplay(data) {
         smallContainer.classList.add('smallContainer');
 
         smallStrings.forEach((small) => {
+            keywordMap.set(small, num++);
             const li = document.createElement("li");
             li.textContent = small;
             li.classList.add('hoverable');
@@ -82,6 +97,7 @@ function updateDisplay(data) {
         display.appendChild(h1Small);
         display.appendChild(smallContainer);
     }
+    //createMapping(largeStrings, mediumStrings, smallStrings);
 }
 
 function printUserInput(userInput) {
@@ -98,6 +114,9 @@ function printUserInput(userInput) {
 function extractKeywords() {
 
     var input = document.getElementById('input').value.trim();
+    //globalUserData = '';
+    //globalUserData = input;
+
     printUserInput(input);
 
     fetch('/api/extractKeywords', {
