@@ -2,7 +2,7 @@ var largeStrings; // +3 words
 var mediumStrings; // 2 words
 var smallStrings; // 1 words
 
-var globalUserData;
+let globalUserData;
 let keywordMap = new Map();
 
 // iterate keyword data and categorize (large, medium, small)
@@ -18,16 +18,20 @@ function categorizeString(raw) {
     });
 }
 
-/*
-function createMapping(large, medium, small) {
-
+// map keywords with location index --> [string, int]
+function findKeywordLocation(text, keywordArray) {
+    keywordArray.forEach((word) => {
+        let index = text.indexOf(word);
+        if (index !== -1) {
+            keywordMap.set(word, index);
+            console.log(`The location of keyword "${word}" is at index "${index}".`);
+        } else {
+            console.log('word not found');
+        }
+    });
 }
-*/
 
 function updateDisplay(data) {
-
-    // counter
-    let num = 0;
 
     // initialize arrays as empty
     largeStrings = [];
@@ -49,7 +53,6 @@ function updateDisplay(data) {
         largeContainer.classList.add('largeContainer');
 
         largeStrings.forEach((large) => {
-            keywordMap.set(large, num++);
             const li = document.createElement("li");
             li.textContent = large;
             li.classList.add('hoverable');
@@ -68,7 +71,6 @@ function updateDisplay(data) {
         mediumContainer.classList.add('mediumContainer');
 
         mediumStrings.forEach((medium) => {
-            keywordMap.set(medium, num++);
             const li = document.createElement("li");
             li.textContent = medium;
             li.classList.add('hoverable');
@@ -87,17 +89,16 @@ function updateDisplay(data) {
         smallContainer.classList.add('smallContainer');
 
         smallStrings.forEach((small) => {
-            keywordMap.set(small, num++);
             const li = document.createElement("li");
             li.textContent = small;
             li.classList.add('hoverable');
             smallContainer.appendChild(li);
-            console.log('printed small keywords:', small);
         });
         display.appendChild(h1Small);
         display.appendChild(smallContainer);
     }
-    //createMapping(largeStrings, mediumStrings, smallStrings);
+    findKeywordLocation(globalUserData, largeStrings);
+    findKeywordLocation(globalUserData, mediumStrings);
 }
 
 function printUserInput(userInput) {
@@ -114,8 +115,8 @@ function printUserInput(userInput) {
 function extractKeywords() {
 
     var input = document.getElementById('input').value.trim();
-    //globalUserData = '';
-    //globalUserData = input;
+    globalUserData = '';
+    globalUserData = input;
 
     printUserInput(input);
 
