@@ -4,6 +4,15 @@ var smallStrings; // 1 words
 
 let globalUserData;
 let keywordMap = new Map();
+let indexValues;
+
+function compareFunction(a, b) {
+    return a - b;
+}
+/*
+function displayTextWithMappings(text, mapping) {
+
+}*/
 
 // iterate keyword data and categorize (large, medium, small)
 function categorizeString(raw) {
@@ -24,9 +33,10 @@ function findKeywordLocation(text, keywordArray) {
         let index = text.indexOf(word);
         if (index !== -1) {
             keywordMap.set(word, index);
+            indexValues.push(index);
             console.log(`The location of keyword "${word}" is at index "${index}".`);
         } else {
-            console.log('word not found');
+            console.log(`The location of keyword "${word}" was not found.`);
         }
     });
 }
@@ -40,6 +50,8 @@ function updateDisplay(data) {
 
     categorizeString(data); // are keywords 1, 2, or 3+ words?
     keywordMap.clear(); // clear any pre-existing data
+
+    indexValues = [];
 
     const display = document.getElementById('display');
     display.innerHTML = '';
@@ -99,6 +111,9 @@ function updateDisplay(data) {
     }
     findKeywordLocation(globalUserData, largeStrings);
     findKeywordLocation(globalUserData, mediumStrings);
+    indexValues.sort(compareFunction);
+
+    //displayTextWithMappings(globalUserData, keywordMap);
 }
 
 function printUserInput(userInput) {
