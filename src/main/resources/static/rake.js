@@ -2,15 +2,39 @@ var largeStrings; // +3 words
 var mediumStrings; // 2 words
 var smallStrings; // 1 words
 
-let globalUserData;
+let globalUserData; // original data
+let globalUpdatedData; // new data
+let indexValues; // keyword index
+
 let keywordMap = new Map();
-let indexValues;
 
 function compareFunction(a, b) {
     return a - b;
 }
 /*
 function displayTextWithMappings(text, mapping) {
+
+    const display = document.getElementById('display');
+    display.innerHTML = '';
+
+    let index = 0;
+    let keyword = "";
+    let keywordIndex = 0;
+    let builder = "";
+    for (let i = 0; i < text.length; i++) {
+        if (i === indexValues[index]) {
+            keyword = keywordMap.get(index);
+            keywordIndex = indexValues[index];
+            display.innerHTML = `
+                <p class='data'>${builder}</p>
+                <p class='${keywordIndex}'>${keyword}</p>
+            `;
+            index++; // increment proceeding keyword index
+            i += keyword.length;
+            builder = ""; // clear builder
+        }
+        builder += text[i]; // string build
+    }
 
 }*/
 
@@ -27,12 +51,12 @@ function categorizeString(raw) {
     });
 }
 
-// map keywords with location index --> [string, int]
+// map keywords with location index --> [keyword, index]
 function findKeywordLocation(text, keywordArray) {
     keywordArray.forEach((word) => {
         let index = text.indexOf(word);
         if (index !== -1) {
-            keywordMap.set(word, index);
+            keywordMap.set(index, word);
             indexValues.push(index);
             console.log(`The location of keyword "${word}" is at index "${index}".`);
         } else {
@@ -112,7 +136,8 @@ function updateDisplay(data) {
     findKeywordLocation(globalUserData, largeStrings);
     findKeywordLocation(globalUserData, mediumStrings);
     indexValues.sort(compareFunction);
-
+    console.log(indexValues);
+    console.log('This is the keyword retrieved via index: ', keywordMap.get(indexValues[0]));
     //displayTextWithMappings(globalUserData, keywordMap);
 }
 
