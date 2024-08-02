@@ -11,32 +11,68 @@ let keywordMap = new Map();
 function compareFunction(a, b) {
     return a - b;
 }
-/*
-function displayTextWithMappings(text, mapping) {
 
-    const display = document.getElementById('display');
-    display.innerHTML = '';
+function addEventListenersToHover() {
+    indexValues.forEach(indexValue => {
+        const elements = document.querySelectorAll(`.key-${indexValue}`);
+        elements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+                elements.forEach(el => el.classList.add('highlight'));
+            });
+            element.addEventListener('mouseleave', () => {
+                elements.forEach(el => el.classList.remove('highlight'));
+            });
+        });
+    });
+}
+
+function displayTextWithMappings(text, values, mapping) {
+    const updatedDisplay = document.getElementById('updatedData');
+    updatedDisplay.innerHTML = '';
 
     let index = 0;
-    let keyword = "";
-    let keywordIndex = 0;
-    let builder = "";
+    let builder = '';
+
     for (let i = 0; i < text.length; i++) {
-        if (i === indexValues[index]) {
-            keyword = keywordMap.get(index);
-            keywordIndex = indexValues[index];
-            display.innerHTML = `
-                <p class='data'>${builder}</p>
-                <p class='${keywordIndex}'>${keyword}</p>
+        console.log('Are they equal: ', i);
+        console.log('to: ', values[index]);
+        if (index < values.length && i === values[index]) {
+
+            if (builder.length > 0) {
+                updatedDisplay.innerHTML += `
+                    <p class='data'>${builder}</p>
+                `;
+                builder = ''; // clear builder
+            }
+            const keywordIndex = values[index];
+            const keyword = mapping.get(keywordIndex);
+            const className = `key-${keywordIndex}`;
+            updatedDisplay.innerHTML += `
+                <p class='${className}'>${keyword}</p>
             `;
+            console.log('Length of keyword: ', keyword.length)
+
+            // check if one keyword shares a smaller keyword
+            if (i + (keyword.length - 1) > values[index+1]) {
+                i = values[index+1] - 1;
+            } else {
+                i += keyword.length - 1;
+            }
+            console.log('This is the calculated index for next position: ', i);
             index++; // increment proceeding keyword index
-            i += keyword.length;
-            builder = ""; // clear builder
+        } else {
+            builder += text[i]; // string build
+            console.log('Incrementing counter: ', i);
         }
-        builder += text[i]; // string build
+    }
+    if (builder) {
+        updatedDisplay.innerHTML += `
+            <p class='data'>${builder}</p>
+        `;
     }
 
-}*/
+    addEventListenersToHover();
+}
 
 // iterate keyword data and categorize (large, medium, small)
 function categorizeString(raw) {
@@ -55,9 +91,9 @@ function categorizeString(raw) {
 function findKeywordLocation(text, keywordArray) {
     keywordArray.forEach((word) => {
         let index = text.indexOf(word);
-        if (index !== -1) {
-            keywordMap.set(index, word);
+        if (index !== -1 && !indexValues.includes(index)) {
             indexValues.push(index);
+            keywordMap.set(index, word);
             console.log(`The location of keyword "${word}" is at index "${index}".`);
         } else {
             console.log(`The location of keyword "${word}" was not found.`);
@@ -90,8 +126,10 @@ function updateDisplay(data) {
 
         largeStrings.forEach((large) => {
             const li = document.createElement("li");
+            let index = globalUserData.indexOf(large);
+            const className = `key-${index}`;
             li.textContent = large;
-            li.classList.add('hoverable');
+            li.classList.add(className);
             largeContainer.appendChild(li);
         });
         display.appendChild(h1Large);
@@ -108,8 +146,10 @@ function updateDisplay(data) {
 
         mediumStrings.forEach((medium) => {
             const li = document.createElement("li");
+            let index = globalUserData.indexOf(medium);
+            const className = `key-${index}`;
             li.textContent = medium;
-            li.classList.add('hoverable');
+            li.classList.add(className);
             mediumContainer.appendChild(li);
         });
         display.appendChild(h1Medium);
@@ -137,8 +177,7 @@ function updateDisplay(data) {
     findKeywordLocation(globalUserData, mediumStrings);
     indexValues.sort(compareFunction);
     console.log(indexValues);
-    console.log('This is the keyword retrieved via index: ', keywordMap.get(indexValues[0]));
-    //displayTextWithMappings(globalUserData, keywordMap);
+    displayTextWithMappings(globalUserData, indexValues, keywordMap);
 }
 
 function printUserInput(userInput) {

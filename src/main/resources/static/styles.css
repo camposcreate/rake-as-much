@@ -16,7 +16,7 @@ li {
     text-align: center;
     color: blue;
 }
-.hoverable:hover {
+.highlight {
     background-color: yellow;
     cursor: pointer;
 }
