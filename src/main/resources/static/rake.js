@@ -1,11 +1,10 @@
-var largeStrings; // +3 words
-var mediumStrings; // 2 words
-var smallStrings; // 1 words
+var largeStrings; // +5 words
+var mediumStrings; // +3 words
+var smallStrings; // <= 2 words
 
 let globalUserData; // original data
-let globalUpdatedData; // new data
+let globalUpdatedData; // updated data
 let indexValues; // keyword index
-
 let keywordMap = new Map();
 
 function compareFunction(a, b) {
@@ -44,6 +43,7 @@ function displayTextWithMappings(text, values, mapping) {
                 `;
                 builder = ''; // clear builder
             }
+
             const keywordIndex = values[index];
             const keyword = mapping.get(keywordIndex);
             const className = `key-${keywordIndex}`;
@@ -52,16 +52,19 @@ function displayTextWithMappings(text, values, mapping) {
             `;
             console.log('Length of keyword: ', keyword.length)
 
-            // check if one keyword shares a smaller keyword
+            // check if one keyword shares a smaller keyword within
             if (i + (keyword.length - 1) > values[index+1]) {
                 i = values[index+1] - 1;
             } else {
-                i += keyword.length - 1;
+                i += (keyword.length - 1);
             }
+
             console.log('This is the calculated index for next position: ', i);
             index++; // increment proceeding keyword index
+        } else if (text[i] === '\n') {
+            builder += '<br>';
         } else {
-            builder += text[i]; // string build
+            builder += text[i]; // build
             console.log('Incrementing counter: ', i);
         }
     }
@@ -70,16 +73,15 @@ function displayTextWithMappings(text, values, mapping) {
             <p class='data'>${builder}</p>
         `;
     }
-
     addEventListenersToHover();
 }
 
 // iterate keyword data and categorize (large, medium, small)
 function categorizeString(raw) {
     raw.forEach((curr) => {
-        if (curr.trim().split(/\s+/).length >= 3) {
+        if (curr.trim().split(/\s+/).length >= 5) {
             largeStrings.push(curr);
-        } else if (curr.trim().split(/\s+/).length === 2) {
+        } else if (curr.trim().split(/\s+/).length >= 3) {
             mediumStrings.push(curr);
         } else {
             smallStrings.push(curr);
@@ -108,9 +110,8 @@ function updateDisplay(data) {
     mediumStrings = [];
     smallStrings = [];
 
-    categorizeString(data); // are keywords 1, 2, or 3+ words?
-    keywordMap.clear(); // clear any pre-existing data
-
+    categorizeString(data); // categorize based on number of words
+    keywordMap.clear(); // clear any pre/existing data
     indexValues = [];
 
     const display = document.getElementById('display');
@@ -166,8 +167,10 @@ function updateDisplay(data) {
 
         smallStrings.forEach((small) => {
             const li = document.createElement("li");
+            let index = globalUserData.indexOf(small);
+            const className = `key-${index}`;
             li.textContent = small;
-            li.classList.add('hoverable');
+            li.classList.add(className);
             smallContainer.appendChild(li);
         });
         display.appendChild(h1Small);
@@ -175,8 +178,10 @@ function updateDisplay(data) {
     }
     findKeywordLocation(globalUserData, largeStrings);
     findKeywordLocation(globalUserData, mediumStrings);
+    findKeywordLocation(globalUserData, smallStrings);
+
     indexValues.sort(compareFunction);
-    console.log(indexValues);
+
     displayTextWithMappings(globalUserData, indexValues, keywordMap);
 }
 
@@ -197,7 +202,7 @@ function extractKeywords() {
     globalUserData = '';
     globalUserData = input;
 
-    printUserInput(input);
+    //printUserInput(input);
 
     fetch('/api/extractKeywords', {
         method: 'POST',

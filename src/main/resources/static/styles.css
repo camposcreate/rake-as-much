@@ -16,6 +16,9 @@ li {
     text-align: center;
     color: blue;
 }
+#updatedData p {
+    display: inline;
+}
 .highlight {
     background-color: yellow;
     cursor: pointer;
