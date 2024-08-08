@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +40,7 @@ public class RakeService {
 
         // return keywords
         List<Term> terms = document.getTermList();
+        System.out.println(Arrays.toString(terms.toArray()));
         return terms.stream().map(Term::getTerm).collect(Collectors.toList());
     }
 }
