@@ -2,10 +2,10 @@ var largeStrings; // +5 words
 var mediumStrings; // +3 words
 var smallStrings; // <= 2 words
 
-let globalUserData; // original data
+let globalUserData; // stores original data
 let globalUpdatedData; // updated data
-let indexValues; // keyword index
-let keywordMap = new Map();
+let indexValues; // stores indices for keywords
+let keywordMap = new Map(); // initializes map
 
 function compareFunction(a, b) {
     return a - b;
@@ -25,7 +25,7 @@ function addEventListenersToHover() {
     });
 }
 
-function displayTextWithMappings(text, values, mapping) {
+function displayTextWithMappings(text, mapping) {
     const updatedDisplay = document.getElementById('updatedData');
     updatedDisplay.innerHTML = '';
 
@@ -33,41 +33,35 @@ function displayTextWithMappings(text, values, mapping) {
     let builder = '';
 
     for (let i = 0; i < text.length; i++) {
-        console.log('Are they equal: ', i);
-        console.log('to: ', values[index]);
-        if (index < values.length && i === values[index]) {
-
+        if (index < indexValues.length && i === indexValues[index]) {
             if (builder.length > 0) {
                 updatedDisplay.innerHTML += `
                     <p class='data'>${builder}</p>
                 `;
-                builder = ''; // clear builder
+                builder = '';
             }
 
-            const keywordIndex = values[index];
+            const keywordIndex = indexValues[index];
             const keyword = mapping.get(keywordIndex);
             const className = `key-${keywordIndex}`;
             updatedDisplay.innerHTML += `
                 <p class='${className}'>${keyword}</p>
             `;
-            console.log('Length of keyword: ', keyword.length)
 
-            // check if one keyword shares a smaller keyword within
-            if (i + (keyword.length - 1) > values[index+1]) {
-                i = values[index+1] - 1;
+            // check if one keyword shares a smaller keyword within itself
+            if (i + (keyword.length - 1) > indexValues[index+1]) {
+                i = indexValues[index+1] - 1;
             } else {
                 i += (keyword.length - 1);
             }
-
-            console.log('This is the calculated index for next position: ', i);
-            index++; // increment proceeding keyword index
+            index++; // proceeding keyword index
         } else if (text[i] === '\n') {
             builder += '<br>';
         } else {
-            builder += text[i]; // build
-            console.log('Incrementing counter: ', i);
+            builder += text[i]; // build text
         }
     }
+    // appends any remaining data
     if (builder) {
         updatedDisplay.innerHTML += `
             <p class='data'>${builder}</p>
@@ -76,7 +70,8 @@ function displayTextWithMappings(text, values, mapping) {
     addEventListenersToHover();
 }
 
-// iterate keyword data and categorize (large, medium, small)
+// iterate keywords and categorize according to word size
+// i.e., large, medium, small
 function categorizeString(raw) {
     raw.forEach((curr) => {
         if (curr.trim().split(/\s+/).length >= 5) {
@@ -89,18 +84,48 @@ function categorizeString(raw) {
     });
 }
 
-// map keywords with location index --> [keyword, index]
+// creates mapping of location index with its keyword
+// (i.e., --> [index, keyword])
 function findKeywordLocation(text, keywordArray) {
     keywordArray.forEach((word) => {
         let index = text.indexOf(word);
         if (index !== -1 && !indexValues.includes(index)) {
             indexValues.push(index);
             keywordMap.set(index, word);
-            console.log(`The location of keyword "${word}" is at index "${index}".`);
         } else {
+            // for debug
             console.log(`The location of keyword "${word}" was not found.`);
         }
     });
+}
+
+function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
+
+    // headings
+    var h1 = document.createElement('h1');
+    if (arrSelector == 0) {
+        h1.textContent = 'Large Keywords';
+    } else if (arrSelector == 1) {
+        h1.textContent = 'Medium Keywords';
+    } else {
+        h1.textContent = 'Small Keywords';
+    }
+
+    if (keywordsAsArray.length > 0) {
+        const keywordsContainer = document.createElement('ul');
+        keywordsContainer.classList.add('keywordsContainer');
+
+        keywordsAsArray.forEach((item) => {
+            const li = document.createElement("li");
+            let index = globalUserData.indexOf(item);
+            const className = `key-${index}`;
+            li.textContent = item;
+            li.classList.add(className);
+            keywordsContainer.appendChild(li);
+        });
+        parent.appendChild(h1);
+        parent.appendChild(keywordsContainer);
+    }
 }
 
 function updateDisplay(data) {
@@ -111,80 +136,30 @@ function updateDisplay(data) {
     smallStrings = [];
 
     categorizeString(data); // categorize based on number of words
-    keywordMap.clear(); // clear any pre/existing data
-    indexValues = [];
+    indexValues = []; // initialize array
+
+    let count = 0; // associates num with string array (i.e., 0 == largeStrings, etc.)
 
     const display = document.getElementById('display');
     display.innerHTML = '';
 
-    // large keywords list
-    if (largeStrings.length > 0) {
-        var h1Large = document.createElement('h1');
-        h1Large.textContent = 'Large Keywords';
+    // creates headings, list elements, and class names for keywords
+    createElementsForKeywords(largeStrings, display, count++);
+    createElementsForKeywords(mediumStrings, display, count++);
+    createElementsForKeywords(smallStrings, display, count++);
 
-        const largeContainer = document.createElement('ul');
-        largeContainer.classList.add('largeContainer');
+    count = 0;
 
-        largeStrings.forEach((large) => {
-            const li = document.createElement("li");
-            let index = globalUserData.indexOf(large);
-            const className = `key-${index}`;
-            li.textContent = large;
-            li.classList.add(className);
-            largeContainer.appendChild(li);
-        });
-        display.appendChild(h1Large);
-        display.appendChild(largeContainer);
-    }
-
-    // medium keywords list
-    if (mediumStrings.length > 0) {
-        var h1Medium = document.createElement('h1');
-        h1Medium.textContent = 'Medium Keywords';
-
-        const mediumContainer = document.createElement('ul');
-        mediumContainer.classList.add('mediumContainer');
-
-        mediumStrings.forEach((medium) => {
-            const li = document.createElement("li");
-            let index = globalUserData.indexOf(medium);
-            const className = `key-${index}`;
-            li.textContent = medium;
-            li.classList.add(className);
-            mediumContainer.appendChild(li);
-        });
-        display.appendChild(h1Medium);
-        display.appendChild(mediumContainer);
-    }
-
-    // small keywords list
-    if (smallStrings.length > 0) {
-        var h1Small = document.createElement('h1');
-        h1Small.textContent = 'Small Keywords';
-
-        const smallContainer = document.createElement('ul');
-        smallContainer.classList.add('smallContainer');
-
-        smallStrings.forEach((small) => {
-            const li = document.createElement("li");
-            let index = globalUserData.indexOf(small);
-            const className = `key-${index}`;
-            li.textContent = small;
-            li.classList.add(className);
-            smallContainer.appendChild(li);
-        });
-        display.appendChild(h1Small);
-        display.appendChild(smallContainer);
-    }
     findKeywordLocation(globalUserData, largeStrings);
     findKeywordLocation(globalUserData, mediumStrings);
     findKeywordLocation(globalUserData, smallStrings);
 
+    // sorts in ascending order
     indexValues.sort(compareFunction);
 
-    displayTextWithMappings(globalUserData, indexValues, keywordMap);
+    displayTextWithMappings(globalUserData, keywordMap);
 }
-
+/*
 function printUserInput(userInput) {
     const userInputDisplay = document.getElementById('userDisplay');
     userInputDisplay.innerHTML = '';
@@ -195,14 +170,14 @@ function printUserInput(userInput) {
         `;
     }
 }
-
+*/
 function extractKeywords() {
 
-    var input = document.getElementById('input').value.trim();
+    let input = document.getElementById('input').value.trim();
     globalUserData = '';
     globalUserData = input;
 
-    //printUserInput(input);
+    keywordMap.clear(); // clear any pre/existing data
 
     fetch('/api/extractKeywords', {
         method: 'POST',
