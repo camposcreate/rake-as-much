@@ -6,10 +6,8 @@ let globalUserData; // stores original data
 let globalUpdatedData; // updated data
 let indexValues; // stores indices for keywords
 let keywordMap = new Map(); // initializes map
-
-function compareFunction(a, b) {
-    return a - b;
-}
+let keywordWithinSelf;
+let keywordMappingWithSelf = new Map();
 
 function addEventListenersToHover() {
     indexValues.forEach(indexValue => {
@@ -67,6 +65,7 @@ function displayTextWithMappings(text, mapping) {
             <p class='data'>${builder}</p>
         `;
     }
+
     addEventListenersToHover();
 }
 
@@ -84,8 +83,12 @@ function categorizeString(raw) {
     });
 }
 
+function compareFunction(a, b) {
+    return a - b;
+}
+
 // creates mapping of location index with its keyword
-// (i.e., --> [index, keyword])
+// (i.e., [index, keyword])
 function findKeywordLocation(text, keywordArray) {
     keywordArray.forEach((word) => {
         let index = text.indexOf(word);
@@ -93,8 +96,9 @@ function findKeywordLocation(text, keywordArray) {
             indexValues.push(index);
             keywordMap.set(index, word);
         } else {
-            // for debug
-            console.log(`The location of keyword "${word}" was not found.`);
+            // for duplicates (i.e., keywords that share same index)
+            keywordWithinSelf.push(index);
+            keywordMappingWithSelf.set(index, word);
         }
     });
 }
@@ -102,7 +106,7 @@ function findKeywordLocation(text, keywordArray) {
 function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
 
     // headings
-    var h1 = document.createElement('h1');
+    let h1 = document.createElement('h1');
     if (arrSelector == 0) {
         h1.textContent = 'Large Keywords';
     } else if (arrSelector == 1) {
@@ -137,6 +141,7 @@ function updateDisplay(data) {
 
     categorizeString(data); // categorize based on number of words
     indexValues = []; // initialize array
+    keywordWithinSelf = [];
 
     let count = 0; // associates num with string array (i.e., 0 == largeStrings, etc.)
 
@@ -150,6 +155,7 @@ function updateDisplay(data) {
 
     count = 0;
 
+    // locate the index of each keyword
     findKeywordLocation(globalUserData, largeStrings);
     findKeywordLocation(globalUserData, mediumStrings);
     findKeywordLocation(globalUserData, smallStrings);
@@ -159,25 +165,16 @@ function updateDisplay(data) {
 
     displayTextWithMappings(globalUserData, keywordMap);
 }
-/*
-function printUserInput(userInput) {
-    const userInputDisplay = document.getElementById('userDisplay');
-    userInputDisplay.innerHTML = '';
 
-    if (userInputDisplay != null) {
-        userInputDisplay.innerHTML = `
-            <p class='userInputData'>${userInput}</p>
-        `;
-    }
-}
-*/
 function extractKeywords() {
 
     let input = document.getElementById('input').value.trim();
     globalUserData = '';
     globalUserData = input;
 
-    keywordMap.clear(); // clear any pre/existing data
+    // clear any pre/existing data
+    keywordMap.clear();
+    keywordMappingWithSelf.clear();
 
     fetch('/api/extractKeywords', {
         method: 'POST',
