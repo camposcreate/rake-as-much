@@ -123,7 +123,13 @@ function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
     // adds class to each keyword
     if (keywordsAsArray.length > 0) {
         const keywordsContainer = document.createElement('ul');
-        keywordsContainer.classList.add('keywordsContainer');
+        if (arrSelector == 0) {
+                keywordsContainer.classList.add('largeKeywords');
+            } else if (arrSelector == 1) {
+                keywordsContainer.classList.add('mediumKeywords');
+            } else {
+                keywordsContainer.classList.add('smallKeywords');
+            }
 
         keywordsAsArray.forEach((item) => {
             const li = document.createElement("li");
