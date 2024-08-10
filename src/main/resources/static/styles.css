@@ -16,13 +16,14 @@ li {
     text-align: center;
     color: blue;
 }
-#updatedData p {
+#displayWithMappings p {
     display: inline;
 }
 .highlight {
     background-color: yellow;
     cursor: pointer;
 }
+/* NOT CURRENTLY IN USE */
 .duplicate {
     background-color: yellow;
     cursor: pointer;

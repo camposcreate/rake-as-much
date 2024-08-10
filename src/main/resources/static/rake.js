@@ -1,14 +1,14 @@
-var largeStrings; // +5 words
-var mediumStrings; // +3 words
-var smallStrings; // <= 2 words
+let largeStrings; // +5 words
+let mediumStrings; // +3 words
+let smallStrings; // <= 2 words
 
-let globalUserData; // stores original data
-let globalUpdatedData; // updated data
+let globalInputData; // stores original data
 let indexValues; // stores indices for keywords
 let keywordMap = new Map(); // initializes map
 let keywordWithinSelf;
 let keywordMappingWithSelf = new Map();
 
+// highlight keywords when hover
 function addEventListenersToHover() {
     indexValues.forEach(indexValue => {
         const elements = document.querySelectorAll(`.key-${indexValue}`);
@@ -23,17 +23,19 @@ function addEventListenersToHover() {
     });
 }
 
-function displayTextWithMappings(text, mapping) {
-    const updatedDisplay = document.getElementById('updatedData');
-    updatedDisplay.innerHTML = '';
+// reconstruct input data with keyword mappings
+// --> give keywords event listeners and display
+function displayTextWithMappings(mapping) {
+    const displayText = document.getElementById('displayWithMappings');
+    displayText.innerHTML = '';
 
     let index = 0;
     let builder = '';
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = 0; i < globalInputData.length; i++) {
         if (index < indexValues.length && i === indexValues[index]) {
             if (builder.length > 0) {
-                updatedDisplay.innerHTML += `
+                displayText.innerHTML += `
                     <p class='data'>${builder}</p>
                 `;
                 builder = '';
@@ -42,7 +44,7 @@ function displayTextWithMappings(text, mapping) {
             const keywordIndex = indexValues[index];
             const keyword = mapping.get(keywordIndex);
             const className = `key-${keywordIndex}`;
-            updatedDisplay.innerHTML += `
+            displayText.innerHTML += `
                 <p class='${className}'>${keyword}</p>
             `;
 
@@ -53,15 +55,16 @@ function displayTextWithMappings(text, mapping) {
                 i += (keyword.length - 1);
             }
             index++; // proceeding keyword index
-        } else if (text[i] === '\n') {
+
+        } else if (globalInputData[i] === '\n') {
             builder += '<br>';
         } else {
-            builder += text[i]; // build text
+            builder += globalInputData[i]; // build text
         }
     }
     // appends any remaining data
     if (builder) {
-        updatedDisplay.innerHTML += `
+        displayText.innerHTML += `
             <p class='data'>${builder}</p>
         `;
     }
@@ -89,9 +92,9 @@ function compareFunction(a, b) {
 
 // creates mapping of location index with its keyword
 // (i.e., [index, keyword])
-function findKeywordLocation(text, keywordArray) {
+function findKeywordLocation(keywordArray) {
     keywordArray.forEach((word) => {
-        let index = text.indexOf(word);
+        let index = globalInputData.indexOf(word);
         if (index !== -1 && !indexValues.includes(index)) {
             indexValues.push(index);
             keywordMap.set(index, word);
@@ -103,6 +106,8 @@ function findKeywordLocation(text, keywordArray) {
     });
 }
 
+// array type(s) are given their own container
+// --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
 
     // headings
@@ -115,13 +120,14 @@ function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
         h1.textContent = 'Small Keywords';
     }
 
+    // adds class to each keyword
     if (keywordsAsArray.length > 0) {
         const keywordsContainer = document.createElement('ul');
         keywordsContainer.classList.add('keywordsContainer');
 
         keywordsAsArray.forEach((item) => {
             const li = document.createElement("li");
-            let index = globalUserData.indexOf(item);
+            let index = globalInputData.indexOf(item);
             const className = `key-${index}`;
             li.textContent = item;
             li.classList.add(className);
@@ -132,7 +138,9 @@ function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
     }
 }
 
-function updateDisplay(data) {
+// main function
+// --> initializes methods and calls functions for front end
+function keywordsDisplay(data) {
 
     // initialize arrays as empty
     largeStrings = [];
@@ -145,7 +153,7 @@ function updateDisplay(data) {
 
     let count = 0; // associates num with string array (i.e., 0 == largeStrings, etc.)
 
-    const display = document.getElementById('display');
+    const display = document.getElementById('displayKeywords');
     display.innerHTML = '';
 
     // creates headings, list elements, and class names for keywords
@@ -156,23 +164,22 @@ function updateDisplay(data) {
     count = 0;
 
     // locate the index of each keyword
-    findKeywordLocation(globalUserData, largeStrings);
-    findKeywordLocation(globalUserData, mediumStrings);
-    findKeywordLocation(globalUserData, smallStrings);
+    findKeywordLocation(largeStrings);
+    findKeywordLocation(mediumStrings);
+    findKeywordLocation(smallStrings);
 
     // sorts in ascending order
     indexValues.sort(compareFunction);
 
-    displayTextWithMappings(globalUserData, keywordMap);
+    displayTextWithMappings(keywordMap);
 }
 
 function extractKeywords() {
 
-    let input = document.getElementById('input').value.trim();
-    globalUserData = '';
-    globalUserData = input;
+    globalInputData = '';
+    globalInputData = document.getElementById('input').value.trim();
 
-    // clear any pre/existing data
+    // clear pre/existing mappings
     keywordMap.clear();
     keywordMappingWithSelf.clear();
 
@@ -181,7 +188,7 @@ function extractKeywords() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: input })
+        body: JSON.stringify({ text: globalInputData })
     })
     .then(response => {
         if(!response.ok) {
@@ -190,7 +197,7 @@ function extractKeywords() {
         return response.json();
     })
     .then(data => {
-        updateDisplay(data);
+        keywordsDisplay(data);
     })
     .catch(error => {
         console.error('Problem with fetching:', error);
