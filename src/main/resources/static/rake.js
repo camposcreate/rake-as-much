@@ -1,15 +1,7 @@
-let largeStrings; // +5 words
-let mediumStrings; // +3 words
-let smallStrings; // <= 2 words
-
-let globalInputData; // stores original data
-let indexValues; // stores indices for keywords
-let keywordMap = new Map(); // initializes map
-let keywordWithinSelf;
-let keywordMappingWithSelf = new Map();
+const display = document.getElementById('displayKeywords');
 
 // highlight keywords when hover
-function addEventListenersToHover() {
+function addEventListenersToHover(indexValues) {
     indexValues.forEach(indexValue => {
         const elements = document.querySelectorAll(`.key-${indexValue}`);
         elements.forEach(element => {
@@ -25,14 +17,14 @@ function addEventListenersToHover() {
 
 // reconstruct input data with keyword mappings
 // --> give keywords event listeners and display
-function displayTextWithMappings(mapping) {
+function displayTextWithMappings(mapping, inputText, indexValues) {
     const displayText = document.getElementById('displayWithMappings');
     displayText.innerHTML = '';
 
     let index = 0;
     let builder = '';
 
-    for (let i = 0; i < globalInputData.length; i++) {
+    for (let i = 0; i < inputText.length; i++) {
         if (index < indexValues.length && i === indexValues[index]) {
             if (builder.length > 0) {
                 displayText.innerHTML += `
@@ -56,10 +48,10 @@ function displayTextWithMappings(mapping) {
             }
             index++; // proceeding keyword index
 
-        } else if (globalInputData[i] === '\n') {
+        } else if (inputText[i] === '\n') {
             builder += '<br>';
         } else {
-            builder += globalInputData[i]; // build text
+            builder += inputText[i]; // build text
         }
     }
     // appends any remaining data
@@ -69,21 +61,7 @@ function displayTextWithMappings(mapping) {
         `;
     }
 
-    addEventListenersToHover();
-}
-
-// iterate keywords and categorize according to word size
-// i.e., large, medium, small
-function categorizeString(raw) {
-    raw.forEach((curr) => {
-        if (curr.trim().split(/\s+/).length >= 5) {
-            largeStrings.push(curr);
-        } else if (curr.trim().split(/\s+/).length >= 3) {
-            mediumStrings.push(curr);
-        } else {
-            smallStrings.push(curr);
-        }
-    });
+    addEventListenersToHover(indexValues);
 }
 
 function compareFunction(a, b) {
@@ -92,9 +70,9 @@ function compareFunction(a, b) {
 
 // creates mapping of location index with its keyword
 // (i.e., [index, keyword])
-function findKeywordLocation(keywordArray) {
+function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf) {
     keywordArray.forEach((word) => {
-        let index = globalInputData.indexOf(word);
+        let index = inputText.indexOf(word);
         if (index !== -1 && !indexValues.includes(index)) {
             indexValues.push(index);
             keywordMap.set(index, word);
@@ -106,9 +84,10 @@ function findKeywordLocation(keywordArray) {
     });
 }
 
-// array type(s) are given their own container
+
+// array type(s) given their own container
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
-function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
+function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
 
     // headings
     let h1 = document.createElement('h1');
@@ -130,71 +109,91 @@ function createElementsForKeywords(keywordsAsArray, parent, arrSelector) {
             } else {
                 keywordsContainer.classList.add('smallKeywords');
             }
-
+        let prev = 0;
         keywordsAsArray.forEach((item) => {
             const li = document.createElement("li");
-            let index = globalInputData.indexOf(item);
-            const className = `key-${index}`;
-            li.textContent = item;
-            li.classList.add(className);
-            keywordsContainer.appendChild(li);
+            let index = inputText.indexOf(item);
+            if (index !== prev) {
+                const className = `key-${index}`;
+                li.textContent = item;
+                li.classList.add(className);
+                keywordsContainer.appendChild(li);
+            }
+            prev = index;
         });
-        parent.appendChild(h1);
-        parent.appendChild(keywordsContainer);
+        display.appendChild(h1);
+        display.appendChild(keywordsContainer);
     }
+}
+
+// iterate keywords and categorize according to word size
+// i.e., large, medium, small
+function categorizeString(keywords, large, medium, small) {
+    keywords.forEach((curr) => {
+        if (curr.trim().split(/\s+/).length >= 5) {
+            large.push(curr);
+        } else if (curr.trim().split(/\s+/).length >= 3) {
+            medium.push(curr);
+        } else {
+            small.push(curr);
+        }
+    });
 }
 
 // main function
 // --> initializes methods and calls functions for front end
-function keywordsDisplay(data) {
+function keywordsDisplay(data, inputRawData) {
 
-    // initialize arrays as empty
-    largeStrings = [];
-    mediumStrings = [];
-    smallStrings = [];
+    // initialize arrays
+    let largeStrings = []; // +5 words
+    let mediumStrings = []; // +3 words
+    let smallStrings = []; // <= 2 words
+    let indexValues = []; // stores indices for keywords
+    let keywordWithinSelf = []; // stores keywords within keywords
 
-    categorizeString(data); // categorize based on number of words
-    indexValues = []; // initialize array
-    keywordWithinSelf = [];
+    // initialize maps
+    let keywordMap = new Map();
+    let keywordMappingWithSelf = new Map();
 
-    let count = 0; // associates num with string array (i.e., 0 == largeStrings, etc.)
+    // re-assign for local scope
+    let userInputText = inputRawData;
 
-    const display = document.getElementById('displayKeywords');
-    display.innerHTML = '';
+    // categorize based on number of words
+    categorizeString(data, largeStrings, mediumStrings, smallStrings);
+
+    let count = 0; // selects string array (i.e., 0 == largeStrings, etc.)
 
     // creates headings, list elements, and class names for keywords
-    createElementsForKeywords(largeStrings, display, count++);
-    createElementsForKeywords(mediumStrings, display, count++);
-    createElementsForKeywords(smallStrings, display, count++);
+    createElementsForKeywords(largeStrings, userInputText, count++);
+    createElementsForKeywords(mediumStrings, userInputText, count++);
+    createElementsForKeywords(smallStrings, userInputText, count++);
 
-    count = 0;
-
-    // locate the index of each keyword
-    findKeywordLocation(largeStrings);
-    findKeywordLocation(mediumStrings);
-    findKeywordLocation(smallStrings);
+    // locate the index of each keyword --> create [key, value] pairs
+    findKeywordLocation(largeStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
+    findKeywordLocation(mediumStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
+    findKeywordLocation(smallStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
 
     // sorts in ascending order
     indexValues.sort(compareFunction);
 
-    displayTextWithMappings(keywordMap);
+    // front end
+    displayTextWithMappings(keywordMap, userInputText, indexValues);
 }
 
 function extractKeywords() {
 
-    globalInputData = '';
-    globalInputData = document.getElementById('input').value.trim();
+    // stores original data
+    let input = document.getElementById('input').value.trim();
 
     // clear pre/existing mappings
-    keywordMap.clear();
-    keywordMappingWithSelf.clear();
+    display.innerHTML = '';
 
     fetch('/api/extractKeywords', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text: globalInputData })
+        body: JSON.stringify({ text: input })
     })
     .then(response => {
         if(!response.ok) {
@@ -203,7 +202,7 @@ function extractKeywords() {
         return response.json();
     })
     .then(data => {
-        keywordsDisplay(data);
+        keywordsDisplay(data, input);
     })
     .catch(error => {
         console.error('Problem with fetching:', error);
