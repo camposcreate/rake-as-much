@@ -84,7 +84,6 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, k
     });
 }
 
-
 // array type(s) given their own container
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
