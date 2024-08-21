@@ -18,17 +18,18 @@ function addEventListenersToHover(indexValues) {
 // reconstruct input data with keyword mappings
 // --> give keywords event listeners and display
 function displayTextWithMappings(mapping, inputText, indexValues) {
-    const displayText = document.getElementById('displayWithMappings');
+    const displayText = document.getElementById('textarea');
     displayText.innerHTML = '';
 
     let index = 0;
     let builder = '';
 
     for (let i = 0; i < inputText.length; i++) {
+        let prev = inputText[i-1];
         if (index < indexValues.length && i === indexValues[index]) {
             if (builder.length > 0) {
                 displayText.innerHTML += `
-                    <p class='data'>${builder}</p>
+                    <span class='data'>${builder}</span>
                 `;
                 builder = '';
             }
@@ -37,7 +38,7 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
             const keyword = mapping.get(keywordIndex);
             const className = `key-${keywordIndex}`;
             displayText.innerHTML += `
-                <p class='${className}'>${keyword}</p>
+                <span class='${className}'>${keyword}</span>
             `;
 
             // check if one keyword shares a smaller keyword within itself
@@ -47,9 +48,8 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
                 i += (keyword.length - 1);
             }
             index++; // proceeding keyword index
-
-        } else if (inputText[i] === '\n') {
-            builder += '<br>';
+        } else if (inputText[i] === '\n' && prev !== '\n') {
+            builder += '<br><br>';
         } else {
             builder += inputText[i]; // build text
         }
@@ -57,7 +57,7 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
     // appends any remaining data
     if (builder) {
         displayText.innerHTML += `
-            <p class='data'>${builder}</p>
+            <span class='data'>${builder}</span>
         `;
     }
 
@@ -182,7 +182,8 @@ function keywordsDisplay(data, inputRawData) {
 function extractKeywords() {
 
     // stores original data
-    let input = document.getElementById('input').value.trim();
+    let input = document.getElementById('textarea').innerText.trim();
+    //let input = document.getElementById('input').value.trim();
 
     // clear pre/existing mappings
     display.innerHTML = '';

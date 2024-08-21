@@ -8,10 +8,8 @@
 </head>
 <body>
     <div class="search">
-        <textarea type="text" id="input" placeholder="Enter text here..."
-                  rows="30" required></textarea>
+        <div id="textarea" class="editable" contenteditable></div>
         <button id="extract" onclick="extractKeywords()">Search</button>
-        <div id="displayWithMappings"></div>
     </div>
     <div id="displayKeywords"></div>
     <script src="rake.js"></script>
