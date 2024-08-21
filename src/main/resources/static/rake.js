@@ -84,6 +84,16 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, k
     });
 }
 
+function scrollToKeyword(element) {
+    const container = document.getElementById('textarea');
+    const containerRect = container.getBoundingClientRect();
+    const elementRect = element.getBoundingClientRect();
+
+    if (elementRect.top < containerRect.top || elementRect.bottom > containerRect.bottom) {
+        container.scrollTop = element.offsetTop - container.clientHeight / 2 + element.clientHeight / 2;
+    }
+}
+
 // array type(s) given their own container
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
@@ -116,6 +126,7 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
                 const className = `key-${index}`;
                 li.textContent = item;
                 li.classList.add(className);
+                li.onmouseover = () => scrollToKeyword(li);
                 keywordsContainer.appendChild(li);
             }
             prev = index;
