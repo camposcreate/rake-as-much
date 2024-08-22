@@ -1,5 +1,17 @@
 const display = document.getElementById('displayKeywords');
 
+// focus keyword within the textarea
+function scrollToKeyword(classname) {
+    const textarea = document.getElementById('textarea');
+    const targetSpan = textarea.querySelector(classname);
+    const spanRect = targetSpan.getBoundingClientRect();
+    const textareaRect = textarea.getBoundingClientRect();
+    const offsetTop = spanRect.top - textareaRect.top + textarea.scrollTop;
+    const offsetLeft = spanRect.left - textareaRect.left + textarea.scrollLeft;
+    textarea.scrollTop = offsetTop;
+    textarea.scrollLeft = offsetLeft;
+}
+
 // highlight keywords when clicked
 function addEventListenersToClick(indexValues) {
     indexValues.forEach(indexValue => {
@@ -8,6 +20,7 @@ function addEventListenersToClick(indexValues) {
             element.addEventListener('click', () => {
                 document.querySelectorAll('.clicked').forEach(el => el.classList.remove('clicked'));
                 elements.forEach(el => el.classList.add('clicked'));
+                scrollToKeyword(`.key-${indexValue}`); // scroll to function
             });
         });
     });
@@ -97,10 +110,6 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, k
         }
     });
 }
-/*
-function scrollToKeyword(li) {
-
-}*/
 
 // array type(s) given their own container
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
@@ -134,7 +143,6 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
                 const className = `key-${index}`;
                 li.textContent = item;
                 li.classList.add(className);
-                //li.onclick = () => scrollToKeyword(li);
                 keywordsContainer.appendChild(li);
             }
             prev = index;

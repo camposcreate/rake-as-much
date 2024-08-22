@@ -16,8 +16,9 @@ body {
     -moz-appearance: textfield-multiline;
     -webkit-appearance: textarea;
     box-sizing: border-box;
-    max-height: 50vh;
     width: 100%;
+    height: 60vh;
+    max-height: 60vh;
     overflow-y: auto;
     padding: 1em;
     resize: none;
@@ -30,7 +31,6 @@ button {
     cursor: pointer;
 }
 ul {
-    list-style.type: none;
     overflow: hidden;
 }
 li {
