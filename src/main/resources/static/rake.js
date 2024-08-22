@@ -1,5 +1,18 @@
 const display = document.getElementById('displayKeywords');
 
+// highlight keywords when clicked
+function addEventListenersToClick(indexValues) {
+    indexValues.forEach(indexValue => {
+        const elements = document.querySelectorAll(`.key-${indexValue}`);
+        elements.forEach(element => {
+            element.addEventListener('click', () => {
+                document.querySelectorAll('.clicked').forEach(el => el.classList.remove('clicked'));
+                elements.forEach(el => el.classList.add('clicked'));
+            });
+        });
+    });
+}
+
 // highlight keywords when hover
 function addEventListenersToHover(indexValues) {
     indexValues.forEach(indexValue => {
@@ -62,6 +75,7 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
     }
 
     addEventListenersToHover(indexValues);
+    addEventListenersToClick(indexValues);
 }
 
 function compareFunction(a, b) {
@@ -83,23 +97,17 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, k
         }
     });
 }
+/*
+function scrollToKeyword(li) {
 
-function scrollToKeyword(element) {
-    const container = document.getElementById('textarea');
-    const containerRect = container.getBoundingClientRect();
-    const elementRect = element.getBoundingClientRect();
-
-    if (elementRect.top < containerRect.top || elementRect.bottom > containerRect.bottom) {
-        container.scrollTop = element.offsetTop - container.clientHeight / 2 + element.clientHeight / 2;
-    }
-}
+}*/
 
 // array type(s) given their own container
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
 
     // headings
-    let h1 = document.createElement('h1');
+    let h1 = document.createElement('h2');
     if (arrSelector == 0) {
         h1.textContent = 'Large Keywords';
     } else if (arrSelector == 1) {
@@ -126,7 +134,7 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
                 const className = `key-${index}`;
                 li.textContent = item;
                 li.classList.add(className);
-                li.onmouseover = () => scrollToKeyword(li);
+                //li.onclick = () => scrollToKeyword(li);
                 keywordsContainer.appendChild(li);
             }
             prev = index;
