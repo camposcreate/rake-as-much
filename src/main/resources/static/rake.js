@@ -8,8 +8,11 @@ function scrollToKeyword(classname) {
     const textareaRect = textarea.getBoundingClientRect();
     const offsetTop = spanRect.top - textareaRect.top + textarea.scrollTop;
     const offsetLeft = spanRect.left - textareaRect.left + textarea.scrollLeft;
-    textarea.scrollTop = offsetTop;
-    textarea.scrollLeft = offsetLeft;
+    textarea.scrollTo({
+        top: offsetTop,
+        left: offsetLeft,
+        behavior: 'smooth'
+    });
 }
 
 // highlight keywords when clicked
@@ -118,11 +121,11 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
     // headings
     let h1 = document.createElement('h2');
     if (arrSelector == 0) {
-        h1.textContent = 'Large Keywords';
+        h1.textContent = 'High Keyword Score';
     } else if (arrSelector == 1) {
-        h1.textContent = 'Medium Keywords';
+        h1.textContent = 'Medium Keyword Score';
     } else {
-        h1.textContent = 'Small Keywords';
+        h1.textContent = 'Low Keyword Score';
     }
 
     // adds class to each keyword
