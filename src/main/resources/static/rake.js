@@ -1,4 +1,7 @@
-const display = document.getElementById('displayKeywords');
+//const display = document.getElementById('displayKeywords');
+const largeKeywordScore = document.getElementById('largeSlide');
+const mediumKeywordScore = document.getElementById('mediumSlide');
+const smallKeywordScore = document.getElementById('smallSlide');
 
 // focus keyword within the textarea
 function scrollToKeyword(classname) {
@@ -150,8 +153,15 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
             }
             prev = index;
         });
-        display.appendChild(h1);
-        display.appendChild(keywordsContainer);
+        //display.appendChild(h1);
+        if (arrSelector == 0) {
+            largeKeywordScore.appendChild(keywordsContainer);
+        } else if (arrSelector == 1) {
+            mediumKeywordScore.appendChild(keywordsContainer);
+        } else {
+            smallKeywordScore.appendChild(keywordsContainer);
+        }
+        //display.appendChild(keywordsContainer);
     }
 }
 
@@ -213,10 +223,12 @@ function extractKeywords() {
 
     // stores original data
     let input = document.getElementById('textarea').innerText.trim();
-    //let input = document.getElementById('input').value.trim();
 
     // clear pre/existing mappings
-    display.innerHTML = '';
+    //display.innerHTML = '';
+    largeKeywordScore.innerHTML = '';
+    mediumKeywordScore.innerHTML = '';
+    smallKeywordScore.innerHTML = '';
 
     fetch('/api/extractKeywords', {
         method: 'POST',
