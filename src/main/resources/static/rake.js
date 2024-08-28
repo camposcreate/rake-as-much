@@ -1,4 +1,3 @@
-//const display = document.getElementById('displayKeywords');
 const largeKeywordScore = document.getElementById('largeSlide');
 const mediumKeywordScore = document.getElementById('mediumSlide');
 const smallKeywordScore = document.getElementById('smallSlide');
@@ -225,7 +224,6 @@ function extractKeywords() {
     let input = document.getElementById('textarea').innerText.trim();
 
     // clear pre/existing mappings
-    //display.innerHTML = '';
     largeKeywordScore.innerHTML = '';
     mediumKeywordScore.innerHTML = '';
     smallKeywordScore.innerHTML = '';
