@@ -7,6 +7,22 @@ body {
     color: #121220;
     background-color: #e2dfdf;
 }
+::-webkit-scrollbar {
+    width: 0.5em;
+}
+::-webkit-scrollbar-track {
+    background: none;
+    border-radius: 100vw;
+    margin-block: .5em;
+}
+::-webkit-scrollbar-thumb {
+    background: #121220;
+    border-radius: 100vw;
+}
+::-webkit-scrollbar-thumb:hover {
+    cursor: pointer;
+}
+
 .search {
     display: flex;
     flex-direction: column;
@@ -28,11 +44,18 @@ body {
 }
 button {
     margin: 0.5em 0 0.5em 0;
-    padding: 1em 2em 1em 2em;
+    padding: 0.75em 0 0.75em 0;
+    font-size: 18px;
     cursor: pointer;
+    color: #121220;
+    border: 2px solid #121220;
+    border-radius: 10px;
+    width: 90%;
+    background-color: #e2dfdf;
+}
+button:hover {
     color: #f0edf2;
     background-color: #121220;
-    border-radius: 12px;
 }
 ul {
     overflow: hidden;
@@ -42,7 +65,7 @@ li {
     display: inline-block;
     padding: 0.75em;
     text-align: center;
-    color: blue;
+    color: #121220;
     cursor: pointer;
 }
 .highlight {
@@ -71,10 +94,10 @@ span .clicked {
 #slides {
    padding: 1em;
    border: 2px solid rgba(18, 18, 32, 0.3);
-   border-radius: 20px;
+   border-radius: 10px;
    position: relative;
    z-index: 1;
-   background: #f0edf2;
+   background: #e2dfdf;
 }
 #overflow {
    width: 100%;
@@ -160,16 +183,21 @@ span .clicked {
    background: #121220;
 }
 @media screen and (max-width: 900px) {
-   #slide1:checked ~ #controls label:nth-child(2),
-   #slide2:checked ~ #controls label:nth-child(3),
-   #slide3:checked ~ #controls label:nth-child(1),
-   #slide1:checked ~ #controls label:nth-last-child(2),
-   #slide2:checked ~ #controls label:nth-last-child(3),
-   #slide3:checked ~ #controls label:nth-last-child(1) {
+
+    button {
+        width: 75%;
+    }
+
+    #slide1:checked ~ #controls label:nth-child(2),
+    #slide2:checked ~ #controls label:nth-child(3),
+    #slide3:checked ~ #controls label:nth-child(1),
+    #slide1:checked ~ #controls label:nth-last-child(2),
+    #slide2:checked ~ #controls label:nth-last-child(3),
+    #slide3:checked ~ #controls label:nth-last-child(1) {
       margin: 0;
-   }
-   #slides {
+    }
+    #slides {
       max-width: calc(100% - 140px);
       margin: 0 auto;
-   }
+    }
 }

@@ -57,7 +57,7 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
 
     for (let i = 0; i < inputText.length; i++) {
         let prev = inputText[i-1];
-        if (index < indexValues.length && i === indexValues[index]) {
+        if ((index < indexValues.length) && (i === indexValues[index])) {
             if (builder.length > 0) {
                 displayText.innerHTML += `
                     <span class='data'>${builder}</span>
@@ -73,11 +73,13 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
             `;
 
             // check if one keyword shares a smaller keyword within itself
-            if (i + (keyword.length - 1) > indexValues[index+1]) {
+            /* (currently introducing bug).. removing for further testing
+            if (i + (keyword.length - 1) > indexValues[index+1] && (keywordIndex + keyword.length === prevIndexValue)) {
                 i = indexValues[index+1] - 1;
             } else {
                 i += (keyword.length - 1);
-            }
+            }*/
+            i += (keyword.length - 1);
             index++; // proceeding keyword index
         } else if (inputText[i] === '\n' && prev !== '\n') {
             builder += '<br><br>';
@@ -91,7 +93,6 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
             <span class='data'>${builder}</span>
         `;
     }
-
     addEventListenersToHover(indexValues);
     addEventListenersToClick(indexValues);
 }
@@ -101,11 +102,12 @@ function compareFunction(a, b) {
 }
 
 // creates mapping of location index with its keyword
-// (i.e., [index, keyword])
+/* (i.e., [index, keyword])
 function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf) {
     keywordArray.forEach((word) => {
         let index = inputText.indexOf(word);
-        if (index !== -1 && !indexValues.includes(index)) {
+        let length = word.length;
+        if ((index !== -1) && (!indexValues.includes(index))) {
             indexValues.push(index);
             keywordMap.set(index, word);
         } else {
@@ -114,10 +116,42 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, k
             keywordMappingWithSelf.set(index, word);
         }
     });
+}*/
+function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, reverseMap) {
+    let processedRanges = [];
+
+    keywordArray.forEach((word) => {
+        let startIndex = 0;
+
+        while (true) {
+            let index = inputText.indexOf(word, startIndex);
+            if (index === -1) break;
+
+            let endIndex = index + word.length;
+            let overlap = false;
+
+            // check for overlap with previously processed keyword(s)
+            for (let range of processedRanges) {
+                if ((index >= range[0] && index < range[1]) ||
+                    (endIndex > range[0] && endIndex <= range[1])) {
+                    overlap = true;
+                    break;
+                }
+            }
+
+            if (!overlap) {
+                indexValues.push(index);
+                keywordMap.set(index, word);
+                reverseMap.set(word, index);
+                processedRanges.push([index, endIndex]);
+            }
+            startIndex = index + 1;
+        }
+    });
 }
 
 // array type(s) given their own container
-// --> keywords are assigned classes (i.e., `key-${index-parameter}`)
+/* --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
 
     // headings
@@ -152,7 +186,7 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
             }
             prev = index;
         });
-        //display.appendChild(h1);
+
         if (arrSelector == 0) {
             largeKeywordScore.appendChild(keywordsContainer);
         } else if (arrSelector == 1) {
@@ -160,12 +194,56 @@ function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
         } else {
             smallKeywordScore.appendChild(keywordsContainer);
         }
-        //display.appendChild(keywordsContainer);
+    }
+}
+*/
+function createElementsForKeywords(keywordsAsArray, indexValues, keywordMap, reverseMap, arrSelector) {
+
+    // headings
+    let h1 = document.createElement('h2');
+    if (arrSelector == 0) {
+        h1.textContent = 'High Keyword Score';
+    } else if (arrSelector == 1) {
+        h1.textContent = 'Medium Keyword Score';
+    } else {
+        h1.textContent = 'Low Keyword Score';
+    }
+
+    // adds class to each keyword
+    if (keywordsAsArray.length > 0) {
+        const keywordsContainer = document.createElement('ul');
+        if (arrSelector == 0) {
+                keywordsContainer.classList.add('largeKeywords');
+            } else if (arrSelector == 1) {
+                keywordsContainer.classList.add('mediumKeywords');
+            } else {
+                keywordsContainer.classList.add('smallKeywords');
+            }
+        keywordsAsArray.forEach((item) => {
+            const li = document.createElement("li");
+            let index = reverseMap.get(item);
+            let prev = 0;
+            if (index !== prev) {
+                const className = `key-${index}`;
+                li.textContent = item;
+                li.classList.add(className);
+                keywordsContainer.appendChild(li);
+            }
+            prev = index;
+        });
+
+        if (arrSelector == 0) {
+            largeKeywordScore.appendChild(keywordsContainer);
+        } else if (arrSelector == 1) {
+            mediumKeywordScore.appendChild(keywordsContainer);
+        } else {
+            smallKeywordScore.appendChild(keywordsContainer);
+        }
     }
 }
 
 // iterate keywords and categorize according to word size
-// i.e., large, medium, small
+/* i.e., large, medium, small
 function categorizeString(keywords, large, medium, small) {
     keywords.forEach((curr) => {
         if (curr.trim().split(/\s+/).length >= 5) {
@@ -174,6 +252,18 @@ function categorizeString(keywords, large, medium, small) {
             medium.push(curr);
         } else {
             small.push(curr);
+        }
+    });
+}*/
+function categorizeString(indexValues, keywordMap, large, medium, small) {
+    indexValues.forEach((index) => {
+        let keyword = keywordMap.get(index);
+        if (keyword.trim().split(/\s+/).length >= 5) {
+            large.push(keyword);
+        } else if (keyword.trim().split(/\s+/).length >= 3) {
+            medium.push(keyword);
+        } else {
+            small.push(keyword);
         }
     });
 }
@@ -191,29 +281,37 @@ function keywordsDisplay(data, inputRawData) {
 
     // initialize maps
     let keywordMap = new Map();
+    let reverseMap = new Map();
     let keywordMappingWithSelf = new Map();
 
     // re-assign for local scope
     let userInputText = inputRawData;
 
     // categorize based on number of words
-    categorizeString(data, largeStrings, mediumStrings, smallStrings);
+    //categorizeString(data, largeStrings, mediumStrings, smallStrings);
 
     let count = 0; // selects string array (i.e., 0 == largeStrings, etc.)
 
-    // creates headings, list elements, and class names for keywords
+    findKeywordLocation(data, userInputText, indexValues, keywordMap, reverseMap);
+
+    categorizeString(indexValues, keywordMap, largeStrings, mediumStrings, smallStrings);
+
+    /* creates headings, list elements, and class names for keywords
     createElementsForKeywords(largeStrings, userInputText, count++);
     createElementsForKeywords(mediumStrings, userInputText, count++);
-    createElementsForKeywords(smallStrings, userInputText, count++);
+    createElementsForKeywords(smallStrings, userInputText, count++); */
+    createElementsForKeywords(largeStrings, indexValues, keywordMap, reverseMap, count++);
+    createElementsForKeywords(mediumStrings, indexValues, keywordMap, reverseMap, count++);
+    createElementsForKeywords(smallStrings, indexValues, keywordMap, reverseMap, count++);
 
-    // locate the index of each keyword --> create [key, value] pairs
+    /* locate the index of each keyword --> create [key, value] pairs
     findKeywordLocation(largeStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
     findKeywordLocation(mediumStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
     findKeywordLocation(smallStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
+    */
 
     // sorts in ascending order
     indexValues.sort(compareFunction);
-
     // front end
     displayTextWithMappings(keywordMap, userInputText, indexValues);
 }
