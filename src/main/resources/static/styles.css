@@ -6,6 +6,7 @@
 body {
     color: #121220;
     background-color: #e2dfdf;
+    font-family: system-ui, sans-serif;
 }
 ::-webkit-scrollbar {
     width: 0.5em;
@@ -22,7 +23,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
     cursor: pointer;
 }
-
 .search {
     display: flex;
     flex-direction: column;
@@ -40,22 +40,22 @@ body {
     padding: 1em;
     resize: none;
     background-color: #f0edf2;
-    border-bottom: 2px solid rgba(18, 18, 32, 0.3);
+    border-bottom: 2px solid rgba(18, 18, 32, 1);
 }
 button {
-    margin: 0.5em 0 0.5em 0;
-    padding: 0.75em 0 0.75em 0;
-    font-size: 18px;
+    margin: 0.75em 0 0.75em 0;
+    padding: 0.9em 0 0.9em 0;
+    font-size: 20px;
     cursor: pointer;
-    color: #121220;
-    border: 2px solid #121220;
+    color: #e2dfdf;
     border-radius: 10px;
     width: 90%;
-    background-color: #e2dfdf;
+    background: rgba(18, 18, 32, 0.9);
 }
 button:hover {
     color: #f0edf2;
-    background-color: #121220;
+    background: rgba(18, 18, 32, 1);
+    transition: 0.2s;
 }
 ul {
     overflow: hidden;
@@ -64,18 +64,24 @@ ul {
 li {
     display: inline-block;
     padding: 0.75em;
+    font-size: 24px;
     text-align: center;
-    color: #121220;
+    color: rgba(18, 18, 32, 0.8);
     cursor: pointer;
 }
 .highlight {
-    background-color: yellow;
+    background-color: #FAFF81;
+    color: #121220;
 }
 .clicked {
-    background-color: blue;
+    color: #121220;
+    background-color: #E27396;
+    transition: 0.2s
 }
 span .clicked {
-    background-color: blue;
+    color: #121220;
+    background-color: #E27396;
+    transition: 0.2s
 }
 /* KEYWORD(s) SLIDER */
 #slider {
@@ -93,11 +99,11 @@ span .clicked {
 }
 #slides {
    padding: 1em;
-   border: 2px solid rgba(18, 18, 32, 0.3);
+   border: 2px solid #121220;
    border-radius: 10px;
    position: relative;
    z-index: 1;
-   background: #e2dfdf;
+   background: #f0edf2;
 }
 #overflow {
    width: 100%;
@@ -124,22 +130,12 @@ span .clicked {
    justify-content: center;
    align-items: center;
    height: 100%;
-   color: #000;
 }
 #slides .slide-content {
    width: 100%;
    height: 225px;
    max-height: 250px;
    overflow-y: auto;
-}
-#slides .slide_1 {
-   /*background: #00171F;*/
-}
-#slides .slide_2 {
-   /*background: #003459;*/
-}
-#slides .slide_3 {
-   /*background: #007EA7;*/
 }
 #controls {
    margin: -155px 0 -30px 0;
