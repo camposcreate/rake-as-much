@@ -71,14 +71,6 @@ function displayTextWithMappings(mapping, inputText, indexValues) {
             displayText.innerHTML += `
                 <span class='${className}'>${keyword}</span>
             `;
-
-            // check if one keyword shares a smaller keyword within itself
-            /* (currently introducing bug).. removing for further testing
-            if (i + (keyword.length - 1) > indexValues[index+1] && (keywordIndex + keyword.length === prevIndexValue)) {
-                i = indexValues[index+1] - 1;
-            } else {
-                i += (keyword.length - 1);
-            }*/
             i += (keyword.length - 1);
             index++; // proceeding keyword index
         } else if (inputText[i] === '\n' && prev !== '\n') {
@@ -102,21 +94,7 @@ function compareFunction(a, b) {
 }
 
 // creates mapping of location index with its keyword
-/* (i.e., [index, keyword])
-function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf) {
-    keywordArray.forEach((word) => {
-        let index = inputText.indexOf(word);
-        let length = word.length;
-        if ((index !== -1) && (!indexValues.includes(index))) {
-            indexValues.push(index);
-            keywordMap.set(index, word);
-        } else {
-            // for duplicates (i.e., keywords that share same index)
-            keywordWithinSelf.push(index);
-            keywordMappingWithSelf.set(index, word);
-        }
-    });
-}*/
+// (i.e., [index, keyword])
 function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, reverseMap) {
     let processedRanges = [];
 
@@ -151,52 +129,7 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, r
 }
 
 // array type(s) given their own container
-/* --> keywords are assigned classes (i.e., `key-${index-parameter}`)
-function createElementsForKeywords(keywordsAsArray, inputText, arrSelector) {
-
-    // headings
-    let h1 = document.createElement('h2');
-    if (arrSelector == 0) {
-        h1.textContent = 'High Keyword Score';
-    } else if (arrSelector == 1) {
-        h1.textContent = 'Medium Keyword Score';
-    } else {
-        h1.textContent = 'Low Keyword Score';
-    }
-
-    // adds class to each keyword
-    if (keywordsAsArray.length > 0) {
-        const keywordsContainer = document.createElement('ul');
-        if (arrSelector == 0) {
-                keywordsContainer.classList.add('largeKeywords');
-            } else if (arrSelector == 1) {
-                keywordsContainer.classList.add('mediumKeywords');
-            } else {
-                keywordsContainer.classList.add('smallKeywords');
-            }
-        let prev = 0;
-        keywordsAsArray.forEach((item) => {
-            const li = document.createElement("li");
-            let index = inputText.indexOf(item);
-            if (index !== prev) {
-                const className = `key-${index}`;
-                li.textContent = item;
-                li.classList.add(className);
-                keywordsContainer.appendChild(li);
-            }
-            prev = index;
-        });
-
-        if (arrSelector == 0) {
-            largeKeywordScore.appendChild(keywordsContainer);
-        } else if (arrSelector == 1) {
-            mediumKeywordScore.appendChild(keywordsContainer);
-        } else {
-            smallKeywordScore.appendChild(keywordsContainer);
-        }
-    }
-}
-*/
+// --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, indexValues, keywordMap, reverseMap, arrSelector) {
 
     // headings
@@ -243,18 +176,7 @@ function createElementsForKeywords(keywordsAsArray, indexValues, keywordMap, rev
 }
 
 // iterate keywords and categorize according to word size
-/* i.e., large, medium, small
-function categorizeString(keywords, large, medium, small) {
-    keywords.forEach((curr) => {
-        if (curr.trim().split(/\s+/).length >= 5) {
-            large.push(curr);
-        } else if (curr.trim().split(/\s+/).length >= 3) {
-            medium.push(curr);
-        } else {
-            small.push(curr);
-        }
-    });
-}*/
+// i.e., large, medium, small
 function categorizeString(indexValues, keywordMap, large, medium, small) {
     indexValues.forEach((index) => {
         let keyword = keywordMap.get(index);
@@ -277,38 +199,28 @@ function keywordsDisplay(data, inputRawData) {
     let mediumStrings = []; // +3 words
     let smallStrings = []; // <= 2 words
     let indexValues = []; // stores indices for keywords
-    let keywordWithinSelf = []; // stores keywords within keywords
+    //let keywordWithinSelf = []; // stores keyword(s) indices within self
 
     // initialize maps
     let keywordMap = new Map();
     let reverseMap = new Map();
-    let keywordMappingWithSelf = new Map();
+    //let keywordMappingWithSelf = new Map();
 
     // re-assign for local scope
     let userInputText = inputRawData;
 
-    // categorize based on number of words
-    //categorizeString(data, largeStrings, mediumStrings, smallStrings);
-
     let count = 0; // selects string array (i.e., 0 == largeStrings, etc.)
 
+    // locate the index of each keyword --> create [key, value] pairs
     findKeywordLocation(data, userInputText, indexValues, keywordMap, reverseMap);
 
+    // categorize based on number of words
     categorizeString(indexValues, keywordMap, largeStrings, mediumStrings, smallStrings);
 
-    /* creates headings, list elements, and class names for keywords
-    createElementsForKeywords(largeStrings, userInputText, count++);
-    createElementsForKeywords(mediumStrings, userInputText, count++);
-    createElementsForKeywords(smallStrings, userInputText, count++); */
+    // creates headings, list elements, and class names for keywords
     createElementsForKeywords(largeStrings, indexValues, keywordMap, reverseMap, count++);
     createElementsForKeywords(mediumStrings, indexValues, keywordMap, reverseMap, count++);
     createElementsForKeywords(smallStrings, indexValues, keywordMap, reverseMap, count++);
-
-    /* locate the index of each keyword --> create [key, value] pairs
-    findKeywordLocation(largeStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
-    findKeywordLocation(mediumStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
-    findKeywordLocation(smallStrings, userInputText, indexValues, keywordMap, keywordWithinSelf, keywordMappingWithSelf);
-    */
 
     // sorts in ascending order
     indexValues.sort(compareFunction);
