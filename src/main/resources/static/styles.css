@@ -54,6 +54,8 @@ body {
     white-space: pre-wrap;
     pointer-events: none;
     letter-spacing: 2px;
+    color: rgba(18, 18, 32, 0.8);
+    font-size: 26px;
 }
 .typing-line {
     display: block;
