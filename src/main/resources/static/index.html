@@ -9,7 +9,7 @@
 <body>
     <div class="search">
         <div id="textarea" class="editable" contenteditable></div>
-        <button id="extract" onclick="extractKeywords()">Search</button>
+        <button id="extract" onclick="extractKeywords()">Extract</button>
     </div>
     <div id="slider">
         <input type="radio" name="slider" id="slide1" checked>
@@ -19,12 +19,15 @@
             <div id="overflow">
                 <div class="inner">
                     <div class="slide slide_1">
+                        <label for="slide1">+++</label>
                         <div class="slide-content" id="largeSlide"></div>
                     </div>
                     <div class="slide slide_2">
+                        <label for="slide2">++</label>
                         <div class="slide-content" id="mediumSlide"></div>
                     </div>
                     <div class="slide slide_3">
+                        <label for="slide3">+</label>
                         <div class="slide-content" id="smallSlide"></div>
                     </div>
                 </div>
@@ -41,6 +44,7 @@
             <label for="slide3"></label>
         </div>
     </div>
+    <script src="placeholder-animate.js"></script>
     <script src="rake.js"></script>
 </body>
 </html>
