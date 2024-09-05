@@ -1,11 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     const textarea = document.getElementById('textarea');
-    const lines = [
-        "RAKE as much?",
-        "...optimize content, drive engagement, and become discoverable.",
-        "",
-        "Paste or begin typing here..."
-    ];
+    const lines = ["RAKE as much?"];
 
     let typingContainer;
 
@@ -21,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
             span.className = 'typing-line';
             span.style.visibility = 'hidden';
 
-            span.style.animation = `typing 2s steps(${line.length*2}), cursor .5s step-end infinite alternate`;
+            span.style.animation = `typing 1s steps(${line.length}), cursor .5s step-end infinite alternate`;
             span.style.animationDelay = `${delay}s`;
 
             setTimeout(() => {
@@ -33,17 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.style.borderRight = 'none';
                 });
             }
-
             typingContainer.appendChild(span);
             typingContainer.appendChild(document.createElement('br'));
         }
 
         lines.forEach((line, index) => {
-            const delay = index * 1; // Adjust delay as needed (2.5s is just an example)
+            const delay = index * 0.75;
             const isLastLine = index === lines.length - 1;
             createLineElement(line, delay, isLastLine);
         });
-
         textarea.style.position = 'relative';
         textarea.parentElement.appendChild(typingContainer);
     }

@@ -47,15 +47,15 @@ body {
     background: #EBE7EE;
 }
 .typing-container {
-    margin: 1em;
+    margin: 0.25em;
     position: absolute;
     top: 0;
     left: 0;
     white-space: pre-wrap;
     pointer-events: none;
-    letter-spacing: 2px;
-    color: rgba(18, 18, 32, 0.8);
-    font-size: 26px;
+    color: rgba(18, 18, 32, 0.7);
+    letter-spacing: 4px;
+    font-size: 72px;
 }
 .typing-line {
     display: block;
