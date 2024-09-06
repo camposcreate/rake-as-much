@@ -30,6 +30,13 @@ body {
     align-items: center;
     justify-content: center;
 }
+.button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 1%;
+}
 .editable {
     -moz-appearance: textfield-multiline;
     -webkit-appearance: textarea;
@@ -73,20 +80,43 @@ body {
         border-color: transparent;
     }
 }
-button {
+#extract {
     margin: 0.75em 0 0.75em 0;
     padding: 0.9em 0 0.9em 0;
     font-size: 20px;
     cursor: pointer;
-    color: #e2dfdf;
-    border-radius: 10px;
-    width: 90%;
-    background: rgba(18, 18, 32, 0.9);
-}
-button:hover {
     color: #f0edf2;
+    border-radius: 10px;
+    width: 79%;
     background: rgba(18, 18, 32, 1);
+}
+#extract:hover {
+    color: #e2dfdf;
+    background: rgba(18, 18, 32, 0.95);
     transition: 0.2s;
+}
+#extract:disabled {
+    background: rgba(18, 18, 32, 0.8);
+    cursor: not-allowed;
+}
+#edit {
+    margin: 0.75em 0 0.75em 0;
+    padding: 0.9em 0 0.9em 0;
+    font-size: 20px;
+    cursor: pointer;
+    color: #f0edf2;
+    border-radius: 10px;
+    width: 10%;
+    background: rgba(18, 18, 32, 1);
+}
+#edit:hover {
+    color: #e2dfdf;
+    background: rgba(18, 18, 32, 0.95);
+    transition: 0.2s;
+}
+#edit:disabled {
+    background: rgba(18, 18, 32, 0.8);
+    cursor: not-allowed;
 }
 ul {
     overflow: hidden;

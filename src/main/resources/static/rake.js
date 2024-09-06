@@ -1,6 +1,9 @@
 const largeKeywordScore = document.getElementById('largeSlide');
 const mediumKeywordScore = document.getElementById('mediumSlide');
 const smallKeywordScore = document.getElementById('smallSlide');
+const editableDiv = document.getElementById('textarea');
+const extractBtn = document.getElementById('extract');
+const editBtn = document.getElementById('edit');
 
 // focus keyword within the textarea
 function scrollToKeyword(classname) {
@@ -228,6 +231,16 @@ function keywordsDisplay(data, inputRawData) {
     displayTextWithMappings(keywordMap, userInputText, indexValues);
 }
 
+// edit function
+editBtn.addEventListener('click', function() {
+    editableDiv.setAttribute('contenteditable', 'true');
+
+    // enable extract button and disable edit button
+    extractBtn.disabled = false;
+    editBtn.disabled = true;
+});
+
+// fetch data
 function extractKeywords() {
 
     // stores original data
@@ -237,6 +250,10 @@ function extractKeywords() {
     largeKeywordScore.innerHTML = '';
     mediumKeywordScore.innerHTML = '';
     smallKeywordScore.innerHTML = '';
+
+    editableDiv.removeAttribute('contenteditable');
+    extractBtn.disabled = true;
+    editBtn.disabled = false;
 
     fetch('/api/extractKeywords', {
         method: 'POST',

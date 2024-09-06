@@ -9,7 +9,10 @@
 <body>
     <div class="search">
         <div id="textarea" class="editable" contenteditable></div>
-        <button id="extract" onclick="extractKeywords()">Extract</button>
+        <div class="button-container">
+            <button id="extract" onclick="extractKeywords()">Extract</button>
+            <button id="edit" disabled>Edit</button>
+        </div>
     </div>
     <div id="slider">
         <input type="radio" name="slider" id="slide1" checked>
