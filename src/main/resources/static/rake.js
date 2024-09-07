@@ -4,6 +4,7 @@ const smallKeywordScore = document.getElementById('smallSlide');
 const editableDiv = document.getElementById('textarea');
 const extractBtn = document.getElementById('extract');
 const editBtn = document.getElementById('edit');
+const resetBtn = document.getElementById('reset');
 
 // focus keyword within the textarea
 function scrollToKeyword(classname) {
@@ -231,13 +232,42 @@ function keywordsDisplay(data, inputRawData) {
     displayTextWithMappings(keywordMap, userInputText, indexValues);
 }
 
-// edit function
+// listen for text
+document.getElementById('textarea').addEventListener('keyup', function() {
+    var value = document.getElementById('textarea').innerText;
+    if (value != "") {
+        extractBtn.disabled = false;
+        resetBtn.disabled = false;
+    } else {
+        extractBtn.disabled = true;
+    }
+})
+
+// disable textarea
+extractBtn.addEventListener('click', function() {
+    editableDiv.removeAttribute('contenteditable');
+    extractBtn.disabled = true;
+    editBtn.disabled = false;
+});
+// enable textarea
 editBtn.addEventListener('click', function() {
     editableDiv.setAttribute('contenteditable', 'true');
-
-    // enable extract button and disable edit button
-    extractBtn.disabled = false;
     editBtn.disabled = true;
+});
+// clear textarea
+resetBtn.addEventListener('click', function() {
+    let input = document.getElementById('textarea');
+    input.innerHTML = '';
+
+    // clear pre/existing mappings
+    largeKeywordScore.innerHTML = '';
+    mediumKeywordScore.innerHTML = '';
+    smallKeywordScore.innerHTML = '';
+
+    editableDiv.setAttribute('contenteditable', 'true');
+    extractBtn.disabled = true;
+    editBtn.disabled = true;
+    resetBtn.disabled = true;
 });
 
 // fetch data
@@ -250,10 +280,6 @@ function extractKeywords() {
     largeKeywordScore.innerHTML = '';
     mediumKeywordScore.innerHTML = '';
     smallKeywordScore.innerHTML = '';
-
-    editableDiv.removeAttribute('contenteditable');
-    extractBtn.disabled = true;
-    editBtn.disabled = false;
 
     fetch('/api/extractKeywords', {
         method: 'POST',

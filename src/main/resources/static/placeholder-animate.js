@@ -29,11 +29,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
             typingContainer.appendChild(span);
-            typingContainer.appendChild(document.createElement('br'));
         }
 
         lines.forEach((line, index) => {
-            const delay = index * 0.75;
+            const delay = index * 0.5;
             const isLastLine = index === lines.length - 1;
             createLineElement(line, delay, isLastLine);
         });
