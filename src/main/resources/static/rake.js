@@ -3,7 +3,6 @@ const mediumKeywordScore = document.getElementById('mediumSlide');
 const smallKeywordScore = document.getElementById('smallSlide');
 const editableDiv = document.getElementById('textarea');
 const extractBtn = document.getElementById('extract');
-const editBtn = document.getElementById('edit');
 const resetBtn = document.getElementById('reset');
 
 // navigating slides
@@ -244,14 +243,7 @@ document.getElementById('textarea').addEventListener('keyup', function() {
 
 // disable textarea
 extractBtn.addEventListener('click', function() {
-    editableDiv.removeAttribute('contenteditable');
     extractBtn.disabled = true;
-    editBtn.disabled = false;
-});
-// enable textarea
-editBtn.addEventListener('click', function() {
-    editableDiv.setAttribute('contenteditable', 'true');
-    editBtn.disabled = true;
 });
 // clear textarea
 resetBtn.addEventListener('click', function() {
@@ -263,15 +255,12 @@ resetBtn.addEventListener('click', function() {
     mediumKeywordScore.innerHTML = '';
     smallKeywordScore.innerHTML = '';
 
-    editableDiv.setAttribute('contenteditable', 'true');
     extractBtn.disabled = true;
-    editBtn.disabled = true;
     resetBtn.disabled = true;
 });
 
 // fetch data
 function extractKeywords() {
-
     // stores original data
     let input = document.getElementById('textarea').innerText.trim();
 

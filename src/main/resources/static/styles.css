@@ -79,45 +79,34 @@ body {
     width: 100%;
     gap: 1%;
 }
-#extract, #edit, #reset {
+#extract, #reset {
     margin: 0.75em 0 0.75em 0;
     padding: 0.9em 0 0.9em 0;
     font-size: 20px;
     cursor: pointer;
     color: #f0edf2;
     border-radius: 10px;
-    width: 70%;
+    width: 76%;
     background: rgba(18, 18, 32, 1);
-}
-#edit {
-    background: rgba(8, 96, 196, 1);
-    width: 11%;
 }
 #reset {
     background: rgba(253, 53, 60, 1);
-    width: 7%;
+    width: 12%;
 }
 #extract:hover {
     background: rgba(18, 18, 32, 0.90);
     transition: 0.2s;
-}
-#edit:hover {
-    background: rgba(8, 96, 196, 0.90);
 }
 #reset:hover {
     background: rgba(253, 53, 60, 0.90);
     transition: 0.2s;
 }
 #extract:disabled {
-    background: rgba(18, 18, 32, 0.7);
-    cursor: not-allowed;
-}
-#edit:disabled {
-    background: rgba(8, 96, 196, 0.7);
+    background: rgba(18, 18, 32, 0.65);
     cursor: not-allowed;
 }
 #reset:disabled {
-    background: rgba(253, 53, 60, 0.7);
+    background: rgba(253, 53, 60, 0.65);
     cursor: not-allowed;
 }
 ul {
