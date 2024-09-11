@@ -1,3 +1,8 @@
+// reset slides
+document.getElementById('reset').addEventListener('click', function() {
+    document.getElementById('slide1').checked = true;
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     const textarea = document.getElementById('textarea');
     const lines = ["RAKE as much?"];

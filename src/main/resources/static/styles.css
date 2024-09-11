@@ -98,14 +98,14 @@ body {
     width: 7%;
 }
 #extract:hover {
-    background: rgba(18, 18, 32, 0.92);
+    background: rgba(18, 18, 32, 0.90);
     transition: 0.2s;
 }
 #edit:hover {
-    background: rgba(8, 96, 196, 0.92);
+    background: rgba(8, 96, 196, 0.90);
 }
 #reset:hover {
-    background: rgba(253, 53, 60, 0.92);
+    background: rgba(253, 53, 60, 0.90);
     transition: 0.2s;
 }
 #extract:disabled {

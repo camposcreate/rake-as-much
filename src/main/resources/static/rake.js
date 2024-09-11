@@ -6,6 +6,19 @@ const extractBtn = document.getElementById('extract');
 const editBtn = document.getElementById('edit');
 const resetBtn = document.getElementById('reset');
 
+// navigating slides
+function navigateSlide(large, medium, small) {
+    if (large > 0) {
+        document.getElementById('slide1').checked = true;
+    } else if (medium > 0) {
+        document.getElementById('slide2').checked = true;
+    } else if (small > 0) {
+        document.getElementById('slide3').checked = true;
+    } else {
+        document.getElementById('slide1').checked = true;
+    }
+}
+
 // focus keyword within the textarea
 function scrollToKeyword(classname) {
     const textarea = document.getElementById('textarea');
@@ -101,10 +114,8 @@ function compareFunction(a, b) {
 // (i.e., [index, keyword])
 function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, reverseMap) {
     let processedRanges = [];
-
     keywordArray.forEach((word) => {
         let startIndex = 0;
-
         while (true) {
             let index = inputText.indexOf(word, startIndex);
             if (index === -1) break;
@@ -136,16 +147,6 @@ function findKeywordLocation(keywordArray, inputText, indexValues, keywordMap, r
 // --> keywords are assigned classes (i.e., `key-${index-parameter}`)
 function createElementsForKeywords(keywordsAsArray, indexValues, keywordMap, reverseMap, arrSelector) {
 
-    // headings
-    let h1 = document.createElement('h2');
-    if (arrSelector == 0) {
-        h1.textContent = 'High Keyword Score';
-    } else if (arrSelector == 1) {
-        h1.textContent = 'Medium Keyword Score';
-    } else {
-        h1.textContent = 'Low Keyword Score';
-    }
-
     // adds class to each keyword
     if (keywordsAsArray.length > 0) {
         const keywordsContainer = document.createElement('ul');
@@ -159,19 +160,15 @@ function createElementsForKeywords(keywordsAsArray, indexValues, keywordMap, rev
         keywordsAsArray.forEach((item) => {
             const li = document.createElement("li");
             let index = reverseMap.get(item);
-            let prev = 0;
-            if (index !== prev) {
-                const className = `key-${index}`;
-                li.textContent = item;
-                li.classList.add(className);
-                keywordsContainer.appendChild(li);
-            }
-            prev = index;
+            const className = `key-${index}`;
+            li.textContent = item;
+            li.classList.add(className);
+            keywordsContainer.appendChild(li);
         });
 
-        if (arrSelector == 0) {
+        if (arrSelector === 0) {
             largeKeywordScore.appendChild(keywordsContainer);
-        } else if (arrSelector == 1) {
+        } else if (arrSelector === 1) {
             mediumKeywordScore.appendChild(keywordsContainer);
         } else {
             smallKeywordScore.appendChild(keywordsContainer);
@@ -203,12 +200,10 @@ function keywordsDisplay(data, inputRawData) {
     let mediumStrings = []; // +3 words
     let smallStrings = []; // <= 2 words
     let indexValues = []; // stores indices for keywords
-    //let keywordWithinSelf = []; // stores keyword(s) indices within self
 
     // initialize maps
     let keywordMap = new Map();
     let reverseMap = new Map();
-    //let keywordMappingWithSelf = new Map();
 
     // re-assign for local scope
     let userInputText = inputRawData;
@@ -226,8 +221,12 @@ function keywordsDisplay(data, inputRawData) {
     createElementsForKeywords(mediumStrings, indexValues, keywordMap, reverseMap, count++);
     createElementsForKeywords(smallStrings, indexValues, keywordMap, reverseMap, count++);
 
+    // navigate to non-empty slide
+    navigateSlide(largeStrings.length, mediumStrings.length, smallStrings.length);
+
     // sorts in ascending order
     indexValues.sort(compareFunction);
+
     // front end
     displayTextWithMappings(keywordMap, userInputText, indexValues);
 }
