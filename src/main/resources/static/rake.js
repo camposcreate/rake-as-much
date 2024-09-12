@@ -256,6 +256,8 @@ resetBtn.addEventListener('click', function() {
     extractBtn.disabled = true;
     resetBtn.disabled = true;
     document.getElementById('slide1').checked = true;
+
+    skeleton();
 });
 
 // fetch data
@@ -288,3 +290,4 @@ function extractKeywords() {
         console.error('Problem with fetching:', error);
     });
 }
+skeleton();

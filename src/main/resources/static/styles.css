@@ -52,7 +52,7 @@ body {
     left: 0;
     white-space: pre-wrap;
     pointer-events: none;
-    color: rgba(18, 18, 32, 0.7);
+    color: rgba(18, 18, 32, 0.8);
     letter-spacing: 4px;
     font-size: 72px;
 }
@@ -85,7 +85,7 @@ body {
     font-size: 20px;
     cursor: pointer;
     color: #f0edf2;
-    border-radius: 10px;
+    border-radius: 0.4em;
     width: 76%;
     background: rgba(18, 18, 32, 1);
 }
@@ -136,6 +136,30 @@ span .clicked {
     background-color: #E27396;
     transition: 0.2s
 }
+/* SKELETON ANIMATION */
+.skeleton {
+    opacity: 0.6;
+    animation: skeleton-loading 1.4s linear infinite alternate;
+}
+.skeleton-text {
+    width: 95%;
+    margin: 0.25em;
+    height: 0.25em;
+}
+.skeleton-text:first-child {
+    width: 90%;
+}
+.skeleton-text:last-child {
+    width: 75%;
+}
+@keyframes skeleton-loading {
+    0% {
+        background-color: #EBE7EE;
+    }
+    100% {
+        background-color: #C7C6CD;
+    }
+}
 /* KEYWORD(s) SLIDER */
 #slider {
     margin: 0 auto;
@@ -153,7 +177,7 @@ span .clicked {
 #slides {
     padding: 1em;
     border: 2px solid #121220;
-    border-radius: 10px;
+    border-radius: 0.4em;
     position: relative;
     z-index: 1;
     background: #f0edf2;
@@ -172,7 +196,7 @@ span .clicked {
     margin-left: -200%;
 }
 #slides .inner {
-    transition: margin-left 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    transition: margin-left 400ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
     width: 400%;
     line-height: 0;
 }

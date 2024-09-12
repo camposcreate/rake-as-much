@@ -65,3 +65,21 @@ document.addEventListener('DOMContentLoaded', function() {
         createTypingContainer();
     }
 });
+
+function skeleton() {
+    const container = ["largeSlide", "mediumSlide", "smallSlide"];
+    const keywords = ["largeKeywords", "mediumKeywords", "smallKeywords"];
+    for (let i = 0; i < keywords.length; i++) {
+        let display = document.getElementById(container[i]);
+        display.innerHTML = '';
+        const slideContainer = document.createElement('ul');
+        slideContainer.classList.add(keywords[i]);
+        slideContainer.innerHTML = `
+            <li class="skeleton skeleton-text"></li><br>
+            <li class="skeleton skeleton-text"></li><br>
+            <li class="skeleton skeleton-text"></li><br>
+            <li class="skeleton skeleton-text"></li>
+        `;
+        display.appendChild(slideContainer);
+    }
+}
