@@ -231,8 +231,8 @@ function keywordsDisplay(data, inputRawData) {
 }
 
 // listen for text
-document.getElementById('textarea').addEventListener('keyup', function() {
-    var value = document.getElementById('textarea').innerText;
+editableDiv.addEventListener('keyup', function() {
+    var value = editableDiv.innerText;
     if (value != "") {
         extractBtn.disabled = false;
         resetBtn.disabled = false;
@@ -240,8 +240,6 @@ document.getElementById('textarea').addEventListener('keyup', function() {
         extractBtn.disabled = true;
     }
 })
-
-// disable textarea
 extractBtn.addEventListener('click', function() {
     extractBtn.disabled = true;
 });
@@ -257,11 +255,12 @@ resetBtn.addEventListener('click', function() {
 
     extractBtn.disabled = true;
     resetBtn.disabled = true;
+    document.getElementById('slide1').checked = true;
 });
 
 // fetch data
 function extractKeywords() {
-    // stores original data
+    // stores raw data
     let input = document.getElementById('textarea').innerText.trim();
 
     // clear pre/existing mappings
