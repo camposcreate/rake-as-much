@@ -40,7 +40,6 @@ public class RakeService {
 
         // return keywords
         List<Term> terms = document.getTermList();
-        System.out.println(Arrays.toString(terms.toArray()));
         return terms.stream().map(Term::getTerm).collect(Collectors.toList());
     }
 }
