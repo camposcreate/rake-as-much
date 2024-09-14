@@ -91,7 +91,7 @@ body {
 }
 #reset {
     background: rgba(253, 53, 60, 1);
-    width: 12%;
+    width: 13%;
 }
 #extract:hover {
     background: rgba(18, 18, 32, 0.90);
@@ -280,12 +280,33 @@ span .clicked {
 #slide3:checked ~ #bullets label:nth-child(3) {
     background: #121220;
 }
-@media screen and (max-width: 900px) {
-
-    button {
-        width: 75%;
+@media screen and (max-width: 1200px) {
+    #extract, #reset {
+        width: 71%;
     }
-
+    #reset {
+        width: 18%;
+    }
+    #slide1:checked ~ #controls label:nth-child(2),
+    #slide2:checked ~ #controls label:nth-child(3),
+    #slide3:checked ~ #controls label:nth-child(1) {
+        margin: 0 -40px 0 0;
+    }
+}
+@media screen and (max-width: 900px) {
+    .editable {
+        height: 50vh;
+        max-height: 50vh;
+    }
+    .typing-container {
+        font-size: 42px;
+    }
+    #extract, #reset {
+        width: 70%;
+    }
+    #reset {
+        width: 18%;
+    }
     #slide1:checked ~ #controls label:nth-child(2),
     #slide2:checked ~ #controls label:nth-child(3),
     #slide3:checked ~ #controls label:nth-child(1),
@@ -295,7 +316,12 @@ span .clicked {
       margin: 0;
     }
     #slides {
-      max-width: calc(100% - 140px);
+      max-width: calc(100% - 80px);
       margin: 0 auto;
+    }
+    #slide1:checked ~ #controls label:nth-child(2),
+    #slide2:checked ~ #controls label:nth-child(3),
+    #slide3:checked ~ #controls label:nth-child(1) {
+        margin: 0 -17px 0 0;
     }
 }
