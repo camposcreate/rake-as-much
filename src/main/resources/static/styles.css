@@ -301,6 +301,10 @@ span .clicked {
     .typing-container {
         font-size: 42px;
     }
+    li {
+        padding: 1em;
+        font-size: 18px;
+    }
     #extract, #reset {
         width: 70%;
     }
