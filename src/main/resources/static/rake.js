@@ -252,7 +252,7 @@ resetBtn.addEventListener('click', function() {
     let input = document.getElementById('textarea');
     input.innerHTML = '';
     charCounter.textContent = `0/10000`;
-    charCounter.style.color = "black";
+    charCounter.style.color = "#121220";
 
     // clear pre/existing mappings
     largeKeywordScore.innerHTML = '';
