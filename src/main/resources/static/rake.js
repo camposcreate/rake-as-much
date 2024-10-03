@@ -2,6 +2,7 @@ const largeKeywordScore = document.getElementById('largeSlide');
 const mediumKeywordScore = document.getElementById('mediumSlide');
 const smallKeywordScore = document.getElementById('smallSlide');
 const editableDiv = document.getElementById('textarea');
+const charCounter = document.getElementById('character-counter');
 const extractBtn = document.getElementById('extract');
 const resetBtn = document.getElementById('reset');
 
@@ -233,11 +234,14 @@ function keywordsDisplay(data, inputRawData) {
 // listen for text
 editableDiv.addEventListener('keyup', function() {
     var value = editableDiv.innerText;
-    if (value != "") {
+    charCounter.textContent = `${0 + value.length}/10000`;
+    if (value != "" && value.length <= 10000) {
         extractBtn.disabled = false;
         resetBtn.disabled = false;
+        charCounter.style.color = "#121220"; // black
     } else {
         extractBtn.disabled = true;
+        charCounter.style.color = "#fd353c"; // red
     }
 })
 extractBtn.addEventListener('click', function() {
@@ -247,6 +251,8 @@ extractBtn.addEventListener('click', function() {
 resetBtn.addEventListener('click', function() {
     let input = document.getElementById('textarea');
     input.innerHTML = '';
+    charCounter.textContent = `0/10000`;
+    charCounter.style.color = "black";
 
     // clear pre/existing mappings
     largeKeywordScore.innerHTML = '';

@@ -45,6 +45,12 @@ body {
 .editable:hover {
     background: #EBE7EE;
 }
+#character-counter {
+    font-size: 0.85em;
+    font-weight: 400;
+    margin-left: auto;
+    margin-bottom: -0.5em;
+}
 .typing-container {
     margin: 0.25em;
     position: absolute;
@@ -53,8 +59,8 @@ body {
     white-space: pre-wrap;
     pointer-events: none;
     color: rgba(18, 18, 32, 0.8);
-    letter-spacing: 4px;
-    font-size: 72px;
+    letter-spacing: 1.4rem;
+    font-size: 4.5rem;
 }
 .typing-line {
     display: block;
@@ -80,9 +86,9 @@ body {
     gap: 1%;
 }
 #extract, #reset {
-    margin: 0.75em 0 0.75em 0;
-    padding: 0.9em 0 0.9em 0;
-    font-size: 20px;
+    margin: 0.7em 0 0.7em 0;
+    padding: 0.8em 0 0.8em 0;
+    font-size: 1.4rem;
     cursor: pointer;
     color: #f0edf2;
     border-radius: 0.4em;
@@ -283,6 +289,7 @@ span .clicked {
 @media screen and (max-width: 1200px) {
     #extract, #reset {
         width: 71%;
+        font-size: 1.3em;
     }
     #reset {
         width: 18%;
@@ -299,7 +306,8 @@ span .clicked {
         max-height: 50vh;
     }
     .typing-container {
-        font-size: 42px;
+        letter-spacing: 0.3rem;
+        font-size: 2.75rem;
     }
     li {
         padding: 1em;
