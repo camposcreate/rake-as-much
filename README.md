@@ -1,6 +1,7 @@
 # RAKE-as-much?
+<img width="650" alt="Screenshot 2024-10-12 at 4 40 49 PM" src="https://github.com/user-attachments/assets/cc2236d7-1c27-4f33-bbe6-c23ed8892116">
 
-This repo contains a tool that aims to visually extract keywords from user-defined text.
+This repo contains a tool that visually extracts keywords from user-defined text.
 
 ## Table of Contents
 - [Description](#description)
@@ -15,7 +16,7 @@ In the digital world, keywords can fundamentally impact your discovery! Whether 
 - Writing a research paper?
 - Need help summarizing?
 
-Borrowing from the popular Rapid Automatic Keyword Extraction (RAKE) algorithm, our tool visually represents keywords based on your input to help you with your interests. 
+Borrowing from the popular Rapid Automatic Keyword Extraction (RAKE) algorithm, our tool visually highlights keywords based on your input to help you with your interests. 
 
 ## Installation
 
@@ -27,4 +28,4 @@ To run locally, follow these steps:
 4. Use `CTRL + C` to stop the application.
 
 ## Usage
-Feel free to explore and begin using keywords yourself.
+Feel free to explore and begin using keywords [here](https://rake-as-much-production.up.railway.app/)
